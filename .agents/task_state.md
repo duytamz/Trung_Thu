@@ -7,4 +7,4 @@
   - [x] Bước 2: Xây dựng Execution Blueprint và được duyệt.
   - [x] Bước 3: Triển khai toàn bộ mã nguồn (`index.html`, `css/`, `js/`).
   - [x] Bước 4: Kiểm tra đa tầng qua Browser Subagent (100% không có lỗi, giao diện đạt độ hoàn thiện cao).
-  - [x] Bước 5: Tạo báo cáo nghiệm thu `walkthrough.md` và đồng bộ tài liệu `.agents`.
+  - [x] Bước 5: Đẩy mã nguồn thành công lên `https://github.com/duytamz/Trung_Thu` (branch `main`). Hướng dẫn kích hoạt GitHub Pages.

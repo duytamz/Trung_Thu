@@ -58,6 +58,44 @@ html, body {
   pointer-events: all;
 }
 
+/* Flower Entrance Layer ("Hoa nhảy ra") */
+.flower-entrance-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+  overflow: hidden;
+}
+
+.jumping-flower {
+  position: absolute;
+  pointer-events: none;
+  animation: flowerPopOut 2.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  filter: drop-shadow(0 0 14px rgba(255, 221, 128, 0.85));
+}
+
+@keyframes flowerPopOut {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.35) rotate(60deg);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) scale(1) rotate(160deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx, 0px) * 1.4), calc(-50% + var(--dy, 0px) * 1.4 + 50px)) scale(0.5) rotate(240deg);
+    opacity: 0;
+  }
+}
+
 /* App Container */
 .app-container {
   position: relative;

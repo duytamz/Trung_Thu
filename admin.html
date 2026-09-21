@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cài Đặt Quà Tặng Trung Thu - Mã QR Trái Tim</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    body {
+      overflow-y: auto !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+      background: radial-gradient(circle at top, #10143a 0%, #050714 100%);
+    }
+
+    .admin-container {
+      width: 100%;
+      max-width: 680px;
+      background: rgba(18, 22, 54, 0.85);
+      border: 1px solid rgba(255, 221, 128, 0.3);
+      border-radius: 28px;
+      padding: 32px 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 30px rgba(255, 107, 139, 0.2);
+      backdrop-filter: blur(16px);
+      z-index: 10;
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      background: rgba(255, 107, 139, 0.2);
+      border: 1px solid rgba(255, 107, 139, 0.4);
+      border-radius: 20px;
+      font-size: 0.82rem;
+      color: #ffa8ba;
+      margin-bottom: 10px;
+    }
+
+    .admin-title {
+      font-family: var(--font-calligraphy);
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #fff7d1, #ffdd80, #f7b731);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .admin-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .card-preview-section {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    #qr-card-canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .settings-form {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 24px;
+    }
+
+    .hint-box {
+      background: rgba(255, 221, 128, 0.1);
+      border-left: 3px solid var(--gold-warm);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: var(--text-gold);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+  </style>
+  <script src="js/qrcode_bundle.js"></script>
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-header">
+      <div class="admin-badge">🔒 Trang Cài Đặt Bí Mật (Chỉ Bạn Thấy)</div>
+      <h1 class="admin-title">Quà Tặng Trung Thu Tình Yêu</h1>
+      <p class="admin-subtitle">Cấu hình thông tin người yêu & Xuất Thẻ Quà Tặng Mã QR Trái Tim chuẩn Zalo</p>
+    </div>
+
+    <div class="hint-box">
+      ✨ <strong>Mẹo:</strong> Sau khi cấu hình xong, bạn bấm <strong>"Tải Ảnh Thẻ Quà Tặng"</strong> để in hoặc gửi ảnh QR cho bé. Khi bé dùng Zalo hoặc Camera quét mã QR, trang web quà tặng sẽ mở ra lung linh với hoa nhảy múa, lồng đèn hoa 3D và bức thư tình của bạn!
+    </div>
+
+    <!-- Live Card Preview -->
+    <div class="card-preview-section">
+      <canvas id="qr-card-canvas"></canvas>
+      <div class="btn-group">
+        <button class="btn-magic" id="download-card-btn">
+          <span>📥</span> Tải Ảnh Thẻ Quà Tặng (In Ấn/Zalo)
+        </button>
+        <button class="btn-magic" id="copy-link-btn" style="background: rgba(255, 255, 255, 0.15);">
+          <span>📋</span> Sao Chép Link
+        </button>
+        <button class="btn-magic" id="preview-page-btn" style="background: rgba(255, 107, 139, 0.25);">
+          <span>👁️</span> Xem Thử Trang Của Bé
+        </button>
+      </div>
+    </div>
+
+    <!-- Customizer Form -->
+    <div class="settings-form">
+      <h2 style="font-size: 1.15rem; color: var(--gold-warm); margin-bottom: 16px;">⚙️ Tùy Chỉnh Thông Tin Quà Tặng</h2>
+
+      <div class="form-group">
+        <label class="form-label">Tên hoặc biệt danh của người yêu:</label>
+        <input type="text" class="form-input" id="cfg-lover-name" value="Em Bé Của Anh" placeholder="Ví dụ: Bé Na, Công Chúa, Em Yêu..." />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tên của bạn (người gửi):</label>
+        <input type="text" class="form-input" id="cfg-sender-name" value="Anh" placeholder="Ví dụ: Anh Yêu, Bạn Trai..." />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ngày bắt đầu yêu nhau (để tính đồng hồ ngày bên nhau):</label>
+        <input type="date" class="form-input" id="cfg-start-date" value="2023-09-29" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Bức thư tình gửi người yêu:</label>
+        <textarea class="form-textarea" id="cfg-letter-content" rows="6" placeholder="Nhập những lời yêu thương muốn nhắn nhủ...">Gửi em - người con gái anh yêu nhất,
+
+Trung Thu này không chỉ có ánh trăng tròn và lồng đèn rực rỡ, mà còn có em - món quà tuyệt vời nhất mà cuộc đời đã mang đến cho anh.
+
+Cảm ơn em vì đã luôn dịu dàng, luôn mang lại nụ cười và sự ấm áp cho anh mỗi ngày. Chúc cho em của anh một mùa Tết Trung Thu thật nhiều niềm vui, luôn rạng rỡ và an yên.
+
+Mong rằng dù bao mùa trăng nữa đi qua, đôi bàn tay này vẫn sẽ được nắm chặt lấy tay em.
+
+Yêu em thật nhiều! ❤️</textarea>
+      </div>
+
+      <button class="btn-magic" id="save-custom-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+        💾 Cập Nhật & Tạo Thẻ QR Trái Tim Mới
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { QRGenerator } from './js/qrGenerator.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const qrGen = new QRGenerator();
+      
+      const elLover = document.getElementById('cfg-lover-name');
+      const elSender = document.getElementById('cfg-sender-name');
+      const elDate = document.getElementById('cfg-start-date');
+      const elMsg = document.getElementById('cfg-letter-content');
+
+      // Sync form with URL hash if exists
+      if (window.location.hash) {
+        try {
+          const params = new URLSearchParams(window.location.hash.slice(1));
+          if (params.get('lover')) elLover.value = decodeURIComponent(params.get('lover'));
+          if (params.get('sender')) elSender.value = decodeURIComponent(params.get('sender'));
+          if (params.get('date')) elDate.value = decodeURIComponent(params.get('date'));
+          if (params.get('msg')) elMsg.value = decodeURIComponent(params.get('msg'));
+        } catch(e) {}
+      }
+
+      const updateCard = () => {
+        const lover = elLover.value.trim() || 'Em Bé Của Anh';
+        const sender = elSender.value.trim() || 'Anh';
+        const date = elDate.value || '2023-09-29';
+        const msg = elMsg.value.trim();
+
+        const params = new URLSearchParams();
+        params.set('lover', encodeURIComponent(lover));
+        params.set('sender', encodeURIComponent(sender));
+        params.set('date', encodeURIComponent(date));
+        if (msg) params.set('msg', encodeURIComponent(msg));
+
+        window.location.hash = params.toString();
+
+        // Target URL that lover will open
+        const publicBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+          ? 'https://duytamz.github.io/Trung_Thu/'
+          : window.location.origin + window.location.pathname.replace('admin.html', '').replace(/\/$/, '') + '/';
+
+        const targetURL = publicBase + '#' + params.toString();
+        qrGen.drawGiftCard(targetURL, lover, sender);
+      };
+
+      document.getElementById('save-custom-btn').addEventListener('click', () => {
+        updateCard();
+        alert('✨ Đã cập nhật thông tin và tạo mã QR thành công!');
+      });
+
+      document.getElementById('download-card-btn').addEventListener('click', () => {
+        qrGen.downloadCardImage();
+      });
+
+      document.getElementById('copy-link-btn').addEventListener('click', () => {
+        const lover = elLover.value.trim() || 'Em Bé Của Anh';
+        const sender = elSender.value.trim() || 'Anh';
+        const date = elDate.value || '2023-09-29';
+        const msg = elMsg.value.trim();
+
+        const params = new URLSearchParams();
+        params.set('lover', encodeURIComponent(lover));
+        params.set('sender', encodeURIComponent(sender));
+        params.set('date', encodeURIComponent(date));
+        if (msg) params.set('msg', encodeURIComponent(msg));
+
+        const publicBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+          ? 'https://duytamz.github.io/Trung_Thu/'
+          : window.location.origin + window.location.pathname.replace('admin.html', '').replace(/\/$/, '') + '/';
+
+        const targetURL = publicBase + '#' + params.toString();
+        navigator.clipboard.writeText(targetURL).then(() => {
+          alert('📋 Đã sao chép link quà tặng cho bé!');
+        }).catch(() => {
+          prompt('Link quà tặng của bé:', targetURL);
+        });
+      });
+
+      document.getElementById('preview-page-btn').addEventListener('click', () => {
+        window.open('index.html' + window.location.hash, '_blank');
+      });
+
+      // Initial render
+      updateCard();
+    });
+  </script>
+</body>
+</html>
