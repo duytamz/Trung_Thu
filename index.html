@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Một Mùa Thương - Quà Tặng Trung Thu Tình Yêu</title>
+  <meta name="description" content="Món quà Trung Thu lãng mạn dành riêng cho người yêu: Lồng đèn hoa ngôi sao 3D, vầng trăng rằm huyền ảo và bức thư tình đong đầy yêu thương." />
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/lantern.css" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏮</text></svg>" />
+</head>
+<body>
+  <!-- Sky Canvas Background (Stars, Moon, Clouds, Fireflies, Floating Sky Lanterns) -->
+  <canvas id="sky-canvas"></canvas>
+
+  <!-- Audio Player Floating Pill -->
+  <div class="audio-floating-pill" id="audio-player-pill" title="Bật/Tắt nhạc Trung Thu">
+    <div class="audio-bars">
+      <div class="audio-bar"></div>
+      <div class="audio-bar"></div>
+      <div class="audio-bar"></div>
+      <div class="audio-bar"></div>
+    </div>
+    <span class="audio-label">Nhạc: Bật</span>
+  </div>
+
+  <!-- App Main Container -->
+  <div class="app-container">
+    <!-- Header Section -->
+    <header class="header-section">
+      <div class="sub-title">Một mùa thương</div>
+      <h1 class="main-title">TRUNG THU</h1>
+      <div class="lover-name-badge">
+        <span>Gửi:</span>
+        <strong id="lover-display-name">Em Bé Của Anh</strong>
+        <span class="heart">❤️</span>
+      </div>
+    </header>
+
+    <!-- Flying Danmaku Wishes Container -->
+    <div class="danmaku-container" id="danmaku-container"></div>
+
+    <!-- Center 3D Star Flower Lantern & Bear Stage -->
+    <div class="lantern-stage" id="lantern-stage">
+      <!-- Injected by js/lantern.js -->
+    </div>
+
+    <!-- Bottom Action Controls Bar -->
+    <footer class="bottom-control-bar">
+      <button class="btn-magic" id="open-letter-btn">
+        <span>💌</span> Mở Bức Thư Tình
+      </button>
+      <button class="btn-magic" id="open-wish-btn">
+        <span>🏮</span> Thả Đèn Trời
+      </button>
+      <button class="btn-icon" id="open-qr-btn" title="Tạo Thẻ Quà Tặng QR Trái Tim">
+        ⚙️
+      </button>
+    </footer>
+  </div>
+
+  <!-- Love Letter & Memories Modal -->
+  <div class="modal-overlay" id="love-letter-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="letter-close-btn">✕</button>
+      
+      <div class="letter-header">
+        <h2 class="letter-title">Bức Thư Mùa Trăng</h2>
+        <div class="letter-subtitle" id="letter-lover-name">Gửi Em Bé Của Anh 💕</div>
+      </div>
+
+      <!-- Love Days Counter -->
+      <div class="love-counter-box">
+        <div class="love-counter-title">Chúng mình đã bên nhau</div>
+        <div class="love-counter-grid">
+          <div class="counter-item">
+            <div class="counter-num" id="counter-days">0</div>
+            <div class="counter-label">Ngày</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-num" id="counter-hours">00</div>
+            <div class="counter-label">Giờ</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-num" id="counter-minutes">00</div>
+            <div class="counter-label">Phút</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-num" id="counter-seconds">00</div>
+            <div class="counter-label">Giây</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Polaroid Memory Photos Gallery -->
+      <div class="polaroid-gallery" id="polaroid-gallery">
+        <!-- Rendered by js/loveLetter.js -->
+      </div>
+
+      <!-- Love Letter Text -->
+      <div class="letter-body" id="letter-body-text">
+        <!-- Text rendered by js/loveLetter.js -->
+      </div>
+
+      <!-- Release Sky Lantern Wish Section -->
+      <div class="wish-section">
+        <div style="font-size: 0.92rem; font-weight: 600; color: var(--gold-warm);">
+          🏮 Gửi điều ước lên cung trăng cùng em:
+        </div>
+        <div class="wish-input-group">
+          <input type="text" class="wish-input" id="wish-input" placeholder="Nhập điều ước của hai đứa..." maxlength="45" />
+          <button class="btn-magic" id="send-wish-btn" style="padding: 8px 18px;">Thả Đèn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code & Gift Card Customizer Modal -->
+  <div class="modal-overlay" id="qr-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="qr-close-btn">✕</button>
+      
+      <div class="letter-header">
+        <h2 class="letter-title" style="font-size: 2.3rem;">Thẻ Quà Tặng QR Trái Tim</h2>
+        <div class="letter-subtitle">Tùy biến nội dung & Xuất thẻ quà tặng như trong video TikTok</div>
+      </div>
+
+      <!-- Canvas Gift Card Preview -->
+      <div class="qr-preview-wrapper">
+        <div class="qr-card-canvas-container">
+          <canvas id="qr-card-canvas"></canvas>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 22px;">
+        <button class="btn-magic" id="download-card-btn">
+          📥 Tải Ảnh Thẻ Quà Tặng
+        </button>
+        <button class="btn-magic" id="copy-link-btn" style="background: rgba(255,255,255,0.15);">
+          📋 Sao Chép Link
+        </button>
+      </div>
+
+      <!-- Personalization Settings Form -->
+      <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 18px;">
+        <h3 style="font-size: 1.05rem; color: var(--gold-warm); margin-bottom: 14px;">⚙️ Tùy Chỉnh Thông Tin Quà Tặng</h3>
+        
+        <div class="form-group">
+          <label class="form-label">Tên người yêu (hoặc biệt danh):</label>
+          <input type="text" class="form-input" id="cfg-lover-name" placeholder="Ví dụ: Bé Na, Công Chúa, Em Yêu..." />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tên của bạn (người gửi):</label>
+          <input type="text" class="form-input" id="cfg-sender-name" placeholder="Ví dụ: Anh Yêu, Bạn Trai..." />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ngày bắt đầu yêu (để tính số ngày bên nhau):</label>
+          <input type="date" class="form-input" id="cfg-start-date" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lời nhắn trong thư tình:</label>
+          <textarea class="form-textarea" id="cfg-letter-content" rows="4" placeholder="Nhập những lời yêu thương muốn nhắn nhủ..."></textarea>
+        </div>
+
+        <button class="btn-magic" id="save-custom-btn" style="width: 100%; justify-content: center;">
+          💾 Lưu Cài Đặt & Cập Nhật Thẻ QR
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript ES6 Module Entry Point -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
