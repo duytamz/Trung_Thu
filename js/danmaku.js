@@ -12,7 +12,7 @@ export class DanmakuSystem {
       { text: "Trung Thu này có em là điều ngọt ngào nhất ❤️", icon: "🏮" },
       { text: "Ánh trăng sáng vì trời cao, còn anh hạnh phúc vì có em 🌙", icon: "✨" },
       { text: "Trung Thu nào cũng muốn được nắm chặt tay em đi dạo 🧸", icon: "💑" },
-      { text: "Chúc công chúa của anh một mùa trăng rằm ngập tràn niềm vui 💕", icon: "👑" },
+      { text: "Chúc em bé của anh một mùa trăng rằm ngập tràn niềm vui 💕", icon: "🧸" },
       { text: "Mùa trăng rằm này, anh chỉ ước có em bên cạnh mãi mãi 🍂", icon: "🌕" },
       { text: "Cảm ơn em vì đã đến và làm cuộc đời anh rực rỡ như đêm rằm ✨", icon: "🌸" },
       { text: "Trăng dưới nước là trăng trên trời, người trước mặt là người trong tim 💖", icon: "🏮" },

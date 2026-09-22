@@ -2,95 +2,163 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>Tạo Mã QR</title>
-  <script src="js/qrcode_bundle.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mã QR Quà Tặng Trung Thu Tình Yêu</title>
+  <link rel="stylesheet" href="css/main.css" />
   <style>
     body {
-      margin: 0;
+      overflow-y: auto !important;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      background: #0a0e27;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
+      align-items: center;
+      padding: 30px 16px;
+      background: radial-gradient(circle at top, #10143a 0%, #050714 100%);
     }
-    h2 { margin-bottom: 16px; color: #ffd700; }
-    #qr-container {
-      background: #fff;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 8px 40px rgba(255, 215, 0, 0.3);
-    }
-    .info {
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: #aaa;
+
+    .qr-card-container {
+      width: 100%;
+      max-width: 660px;
+      background: rgba(18, 22, 54, 0.88);
+      border: 1px solid rgba(255, 221, 128, 0.35);
+      border-radius: 28px;
+      padding: 32px 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 35px rgba(255, 107, 139, 0.25);
+      backdrop-filter: blur(16px);
       text-align: center;
-      max-width: 400px;
     }
-    .url-text {
-      margin-top: 12px;
-      padding: 10px 18px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
+
+    .qr-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 16px;
+      background: rgba(255, 107, 139, 0.2);
+      border: 1px solid rgba(255, 107, 139, 0.4);
+      border-radius: 20px;
       font-size: 0.85rem;
-      color: #ffd700;
+      color: #ffa8ba;
+      margin-bottom: 12px;
+    }
+
+    .qr-page-title {
+      font-family: var(--font-calligraphy);
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #fff7d1, #ffdd80, #f7b731);
+      -webkit-background-clip: text;
+      -webkit-fill-color: transparent;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .qr-page-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .canvas-wrapper {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    #qr-card-canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+    }
+
+    .url-display {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px dashed rgba(255, 221, 128, 0.3);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 0.86rem;
+      color: var(--gold-warm);
       word-break: break-all;
+      margin-bottom: 20px;
     }
-    button {
-      margin-top: 16px;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 24px;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 107, 139, 0.5);
+
+    .actions-grid {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
-    button:hover { transform: scale(1.05); }
+
+    .hint-footer {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
   </style>
+  <script src="js/qrcode_bundle.js"></script>
 </head>
 <body>
-  <h2>🏮 Mã QR Quà Tặng Trung Thu</h2>
-  <div id="qr-container"></div>
-  <div class="url-text" id="target-url"></div>
-  <button onclick="downloadQR()">📥 Tải Ảnh QR</button>
-  <div class="info">Quét mã QR trên Zalo/Camera điện thoại sẽ mở trang web quà tặng Trung Thu</div>
+  <div class="qr-card-container">
+    <div class="qr-badge">💌 Món Quà Trao Bé</div>
+    <h1 class="qr-page-title">Mã QR Quà Tặng Trung Thu</h1>
+    <p class="qr-page-desc">
+      Quét mã trên <strong>Zalo</strong> hoặc <strong>Camera điện thoại</strong> để mở trang quà tặng lãng mạn dành riêng cho em bé!
+    </p>
 
-  <script>
-    const targetURL = 'https://duytamz.github.io/Trung_Thu/';
-    document.getElementById('target-url').textContent = targetURL;
+    <div class="canvas-wrapper">
+      <canvas id="qr-card-canvas"></canvas>
+    </div>
 
-    const qr = new QRCode(document.getElementById('qr-container'), {
-      text: targetURL,
-      width: 280,
-      height: 280,
-      colorDark: '#c0392b',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.H
+    <div class="url-display">
+      🔗 <strong>Đường dẫn trực tiếp:</strong> <span id="target-url-text">https://duytamz.github.io/Trung_Thu/</span>
+    </div>
+
+    <div class="actions-grid">
+      <button class="btn-magic" id="download-card-btn">
+        <span>📥</span> Tải Ảnh Thẻ Quà Tặng (PNG)
+      </button>
+      <button class="btn-magic" id="copy-link-btn" style="background: rgba(255, 255, 255, 0.15);">
+        <span>📋</span> Sao Chép Link
+      </button>
+      <a href="index.html" class="btn-magic" style="text-decoration: none; background: rgba(255, 107, 139, 0.25);">
+        <span>🏮</span> Xem Trang Quà Tặng
+      </a>
+    </div>
+
+    <div class="hint-footer">
+      💡 <em>Gợi ý:</em> Bạn có thể tải thẻ ảnh về để gửi qua Zalo/Messenger cho bé, hoặc in ra dán vào hộp bánh Trung Thu kèm lời chúc!
+    </div>
+  </div>
+
+  <script type="module">
+    import { QRGenerator } from './js/qrGenerator.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const qrGen = new QRGenerator();
+      const targetURL = 'https://duytamz.github.io/Trung_Thu/';
+      document.getElementById('target-url-text').textContent = targetURL;
+
+      // Draw gift card for boyfriend with top persona
+      qrGen.drawGiftCard(targetURL, 'Em Bé Của Anh', 'Anh');
+
+      document.getElementById('download-card-btn').addEventListener('click', () => {
+        qrGen.downloadCardImage();
+      });
+
+      document.getElementById('copy-link-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(targetURL).then(() => {
+          alert('📋 Đã sao chép link quà tặng!');
+        }).catch(() => {
+          prompt('Link trang quà tặng:', targetURL);
+        });
+      });
     });
-
-    function downloadQR() {
-      const canvas = document.querySelector('#qr-container canvas');
-      if (canvas) {
-        const link = document.createElement('a');
-        link.download = 'QR_TrungThu_QuaTang.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      } else {
-        const img = document.querySelector('#qr-container img');
-        if (img) {
-          const link = document.createElement('a');
-          link.download = 'QR_TrungThu_QuaTang.png';
-          link.href = img.src;
-          link.click();
-        }
-      }
-    }
   </script>
 </body>
 </html>

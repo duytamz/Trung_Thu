@@ -148,19 +148,14 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Ngày bắt đầu yêu nhau (để tính đồng hồ ngày bên nhau):</label>
-        <input type="date" class="form-input" id="cfg-start-date" value="2023-09-29" />
-      </div>
-
-      <div class="form-group">
         <label class="form-label">Bức thư tình gửi người yêu:</label>
-        <textarea class="form-textarea" id="cfg-letter-content" rows="6" placeholder="Nhập những lời yêu thương muốn nhắn nhủ...">Gửi em - người con gái anh yêu nhất,
+        <textarea class="form-textarea" id="cfg-letter-content" rows="6" placeholder="Nhập những lời yêu thương muốn nhắn nhủ...">Gửi em - chàng trai anh yêu thương nhất,
 
 Trung Thu này không chỉ có ánh trăng tròn và lồng đèn rực rỡ, mà còn có em - món quà tuyệt vời nhất mà cuộc đời đã mang đến cho anh.
 
-Cảm ơn em vì đã luôn dịu dàng, luôn mang lại nụ cười và sự ấm áp cho anh mỗi ngày. Chúc cho em của anh một mùa Tết Trung Thu thật nhiều niềm vui, luôn rạng rỡ và an yên.
+Cảm ơn em vì đã luôn dịu dàng, luôn mang lại nụ cười và sự ấm áp cho anh mỗi ngày. Chúc cho em bé của anh một mùa Tết Trung Thu thật nhiều niềm vui, luôn rạng rỡ và an yên.
 
-Mong rằng dù bao mùa trăng nữa đi qua, đôi bàn tay này vẫn sẽ được nắm chặt lấy tay em.
+Mong rằng dù bao mùa trăng nữa đi qua, đôi bàn tay này vẫn sẽ luôn nắm chặt lấy tay em và chở che cho em.
 
 Yêu em thật nhiều! ❤️</textarea>
       </div>
@@ -179,7 +174,6 @@ Yêu em thật nhiều! ❤️</textarea>
       
       const elLover = document.getElementById('cfg-lover-name');
       const elSender = document.getElementById('cfg-sender-name');
-      const elDate = document.getElementById('cfg-start-date');
       const elMsg = document.getElementById('cfg-letter-content');
 
       // Sync form with URL hash if exists
@@ -188,7 +182,6 @@ Yêu em thật nhiều! ❤️</textarea>
           const params = new URLSearchParams(window.location.hash.slice(1));
           if (params.get('lover')) elLover.value = decodeURIComponent(params.get('lover'));
           if (params.get('sender')) elSender.value = decodeURIComponent(params.get('sender'));
-          if (params.get('date')) elDate.value = decodeURIComponent(params.get('date'));
           if (params.get('msg')) elMsg.value = decodeURIComponent(params.get('msg'));
         } catch(e) {}
       }
@@ -196,13 +189,11 @@ Yêu em thật nhiều! ❤️</textarea>
       const updateCard = () => {
         const lover = elLover.value.trim() || 'Em Bé Của Anh';
         const sender = elSender.value.trim() || 'Anh';
-        const date = elDate.value || '2023-09-29';
         const msg = elMsg.value.trim();
 
         const params = new URLSearchParams();
         params.set('lover', encodeURIComponent(lover));
         params.set('sender', encodeURIComponent(sender));
-        params.set('date', encodeURIComponent(date));
         if (msg) params.set('msg', encodeURIComponent(msg));
 
         window.location.hash = params.toString();
@@ -228,13 +219,11 @@ Yêu em thật nhiều! ❤️</textarea>
       document.getElementById('copy-link-btn').addEventListener('click', () => {
         const lover = elLover.value.trim() || 'Em Bé Của Anh';
         const sender = elSender.value.trim() || 'Anh';
-        const date = elDate.value || '2023-09-29';
         const msg = elMsg.value.trim();
 
         const params = new URLSearchParams();
         params.set('lover', encodeURIComponent(lover));
         params.set('sender', encodeURIComponent(sender));
-        params.set('date', encodeURIComponent(date));
         if (msg) params.set('msg', encodeURIComponent(msg));
 
         const publicBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
