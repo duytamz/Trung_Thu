@@ -405,9 +405,6 @@ export class Lantern {
             </div>
           </div>
         </div>
-
-        <!-- Tap Hint underneath -->
-        <div class="lantern-hint">✨ Chạm vào lồng đèn để mở quà ✨</div>
       </div>
     `;
 

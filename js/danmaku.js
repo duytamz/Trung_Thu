@@ -4,7 +4,7 @@
 export class DanmakuSystem {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
-    this.lanes = [15, 50, 85]; // Y offsets for 3 lanes
+    this.lanes = [6, 28]; // Compact 2 lanes in top sky
     this.currentLane = 0;
     this.isRunning = true;
     
@@ -23,13 +23,13 @@ export class DanmakuSystem {
   }
 
   init() {
-    // Start interval loop to spawn messages
+    // Start interval loop to spawn messages gently
     this.spawnNext();
     this.timer = setInterval(() => {
       if (this.isRunning) {
         this.spawnNext();
       }
-    }, 2800);
+    }, 4200);
   }
 
   spawnNext() {
