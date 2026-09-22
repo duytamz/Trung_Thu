@@ -517,9 +517,11 @@ export class Lantern {
       const clickX = rect.left + rect.width * 0.5;
       const clickY = rect.top + rect.height * 0.45;
 
-      // Burst sparkles
+      // Sparkle burst
       if (this.skyCanvas) {
         this.skyCanvas.createSparkleBurst(clickX, clickY, 35);
+        // 🌸 Tung Hoa Blossom Burst effect — full-screen flower explosion
+        this.skyCanvas.triggerBlossomBurst(clickX, clickY);
       }
 
       // Bump scale animation
