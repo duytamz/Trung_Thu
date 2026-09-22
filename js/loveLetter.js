@@ -75,7 +75,6 @@ export class LoveLetter {
     if (bodyEl) bodyEl.textContent = this.config.letterContent;
 
     this.renderPolaroids();
-    this.startLoveCounter();
   }
 
   renderPolaroids() {
@@ -89,34 +88,6 @@ export class LoveLetter {
         <div class="polaroid-caption">${p.caption}</div>
       </div>
     `).join('');
-  }
-
-  startLoveCounter() {
-    if (this.timerInterval) clearInterval(this.timerInterval);
-
-    const update = () => {
-      const start = new Date(this.config.startDate).getTime();
-      const now = new Date().getTime();
-      const diff = Math.max(0, now - start);
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      const elDays = document.getElementById('counter-days');
-      const elHours = document.getElementById('counter-hours');
-      const elMinutes = document.getElementById('counter-minutes');
-      const elSeconds = document.getElementById('counter-seconds');
-
-      if (elDays) elDays.textContent = days;
-      if (elHours) elHours.textContent = String(hours).padStart(2, '0');
-      if (elMinutes) elMinutes.textContent = String(minutes).padStart(2, '0');
-      if (elSeconds) elSeconds.textContent = String(seconds).padStart(2, '0');
-    };
-
-    update();
-    this.timerInterval = setInterval(update, 1000);
   }
 
   open() {

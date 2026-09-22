@@ -413,47 +413,6 @@ html, body {
   margin-top: 4px;
 }
 
-/* Love Days Counter */
-.love-counter-box {
-  background: rgba(255, 107, 139, 0.12);
-  border: 1px dashed rgba(255, 107, 139, 0.4);
-  border-radius: 18px;
-  padding: 16px;
-  text-align: center;
-  margin-bottom: 22px;
-}
-
-.love-counter-title {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.love-counter-grid {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.counter-item {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  padding: 8px 12px;
-  min-width: 60px;
-}
-
-.counter-num {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--gold-warm);
-}
-
-.counter-label {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
 
 /* Letter Content */
 .letter-body {
