@@ -8,3 +8,4 @@
   - [x] Bước 3: Triển khai toàn bộ mã nguồn (`index.html`, `css/`, `js/`).
   - [x] Bước 4: Kiểm tra đa tầng qua Browser Subagent (100% không có lỗi, giao diện đạt độ hoàn thiện cao).
   - [x] Bước 5: Đẩy mã nguồn thành công lên `https://github.com/duytamz/Trung_Thu` (branch `main`). Hướng dẫn kích hoạt GitHub Pages.
+  - [x] Bỏ khối đếm ngày yêu nhau "CHÚNG MÌNH ĐÃ BÊN NHAU" theo yêu cầu người dùng, đã đồng bộ lên GitHub (`5067930`).
