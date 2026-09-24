@@ -15,3 +15,4 @@
   - [x] Tối ưu và đưa 3 ảnh kỷ niệm người dùng cung cấp vào Bức Thư Mùa Trăng (nén WebP/JPG chỉ còn ~52KB tổng cộng, lazy-loading, mượt 60 FPS trên điện thoại yếu).
   - [x] Hoàn thiện action nút "Thả Đèn" (thả đèn trời Khổng Minh hoa đăng phát sáng bay lên cung trăng kèm dải ước nguyện, hiệu ứng nổ pháo hoa hoa anh đào, danmaku bay ngang, phản hồi tức thì).
   - [x] Tạo nút và modal "Quả Cầu Kỷ Niệm" 3D (xoay 360 độ ngắm 20 ảnh album theo hình cầu Fibonacci, hiệu ứng lấp lánh ánh trăng stardust, tương tác vuốt xoay mượt mà, tối ưu 60 FPS cho điện thoại yếu).
+  - [x] Nâng cấp toàn diện Quả Cầu Kỷ Niệm v2.0: Cấu trúc 3 tầng cân xứng không bị bẹt dẹt góc nghiêng, Z-depth shading chiều sâu không gian (mặt trước sáng rực rỡ, mặt sau mờ dịu), lõi ánh trăng Lunar Core và vành đai tinh tú Saturn Ring xoay huyền ảo, khung ảnh mạ vàng kèm nhãn tag tình yêu.

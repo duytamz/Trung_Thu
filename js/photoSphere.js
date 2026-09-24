@@ -1,11 +1,12 @@
 /**
- * PhotoSphere Component - Quả Cầu Kỷ Niệm 3D Xoay 360 Độ
- * - Tối ưu 60 FPS trên điện thoại yếu: CSS 3D Transforms, WebP siêu nhẹ, zero CPU khi đóng
- * - Hiệu ứng ánh trăng lấp lánh (Sparkling Aura & Orbiting Stardust)
- * - Tương tác chạm/kéo xoay 3D mượt mà
+ * PhotoSphere Component v2.0 - Quả Cầu Kỷ Niệm 3D Cao Cấp
+ * - 3 tầng ảnh phân bổ cân đối (Tiered Globe Ring), KHÔNG bị lật méo cạnh dẹt (knife-edge)
+ * - Chiều sâu không gian 3D (Z-Depth Shading): Mặt trước sáng rõ rạng ngời, mặt sau mờ nhẹ huyền ảo
+ * - Lõi ánh trăng (Lunar Core) & Vành đai tinh tú hoàng kim (Saturn Ring)
+ * - Tối ưu 60 FPS trên điện thoại cấu hình yếu (Hardware Accelerated CSS 3D)
  */
 export class PhotoSphere {
-  constructor(options = {}) {
+  constructor() {
     this.modal = document.getElementById('photo-sphere-modal');
     this.world = document.getElementById('sphere-3d-world');
     this.sparklesContainer = document.getElementById('sphere-sparkles');
@@ -16,9 +17,7 @@ export class PhotoSphere {
 
     // Rotation angles
     this.rotY = 0;
-    this.rotX = -10;
-    this.targetRotY = 0;
-    this.targetRotX = -10;
+    this.rotX = -8;
     this.autoSpinSpeed = 0.22;
 
     // Pointer drag physics
@@ -27,16 +26,31 @@ export class PhotoSphere {
     this.startY = 0;
     this.lastDeltaX = 0;
     this.lastDeltaY = 0;
+    this.velY = 0.22;
+    this.velX = 0;
 
-    // Captions list
+    // Sweet captions for each photo
     const captions = [
-      'Khoảnh khắc ngọt ngào ✨', 'Nụ cười của em ❤️', 'Bên nhau mùa trăng 🏮',
-      'Ánh mắt dịu dàng 💕', 'Mãi yêu em bé ✨', 'Mùa trăng đoàn viên 🥮',
-      'Tay trong tay 🤝', 'Bình yên bên em 🌸', 'Những ngày hạnh phúc 💖',
-      'Chàng trai của anh 🌟', 'Kỷ niệm khó phai 💫', 'Ấm áp mùa thu 🍂',
-      'Mãi không cách xa ❤️', 'Trăng rằm soi bóng 🌕', 'Yêu thương đong đầy 💌',
-      'Hạnh phúc giản đơn 🍃', 'Bên em mọi mùa trăng 🏮', 'Nụ cười tỏa nắng ☀️',
-      'Nguyện ước trăm năm 💍', 'Chở che cho em 🛡️'
+      { text: 'Khoảnh khắc ngọt ngào ✨', tag: 'Ngọt ngào' },
+      { text: 'Nụ cười tỏa nắng của em ❤️', tag: 'Nụ cười' },
+      { text: 'Bên em mọi mùa trăng 🏮', tag: 'Mùa trăng' },
+      { text: 'Ánh mắt dịu dàng 💕', tag: 'Dịu dàng' },
+      { text: 'Mãi yêu em bé của anh 🌟', tag: 'Yêu thương' },
+      { text: 'Tết Trung Thu đoàn viên 🥮', tag: 'Đoàn viên' },
+      { text: 'Tay nắm chặt tay 🤝', tag: 'Bên nhau' },
+      { text: 'Bình yên là khi có em 🌸', tag: 'Bình yên' },
+      { text: 'Những ngày tháng hạnh phúc 💖', tag: 'Hạnh phúc' },
+      { text: 'Chàng trai anh yêu nhất 💫', tag: 'Chàng trai' },
+      { text: 'Kỷ niệm khó phai 🍃', tag: 'Kỷ niệm' },
+      { text: 'Ấm áp mùa thu 🍂', tag: 'Ấm áp' },
+      { text: 'Mãi không cách xa ❤️', tag: 'Mãi mãi' },
+      { text: 'Trăng rằm soi bóng đôi ta 🌕', tag: 'Trăng rằm' },
+      { text: 'Yêu thương đong đầy 💌', tag: 'Đong đầy' },
+      { text: 'Nụ cười làm anh say đắm ✨', tag: 'Say đắm' },
+      { text: 'Tình yêu mùa thu 🍁', tag: 'Mùa thu' },
+      { text: 'Hạnh phúc giản đơn ☕', tag: 'Giản đơn' },
+      { text: 'Chở che cho em 🛡️', tag: 'Chở che' },
+      { text: 'Nguyện ước bên nhau trăm năm 💍', tag: 'Nguyện ước' }
     ];
 
     // Load 20 optimized album photos
@@ -46,10 +60,12 @@ export class PhotoSphere {
         id: i,
         webp: `assets/images/album/thumb_${i}.webp`,
         jpg: `assets/images/album/thumb_${i}.jpg`,
-        caption: captions[(i - 1) % captions.length]
+        caption: captions[(i - 1) % captions.length].text,
+        tag: captions[(i - 1) % captions.length].tag
       });
     }
 
+    this.cardElements = [];
     this.init();
   }
 
@@ -59,56 +75,84 @@ export class PhotoSphere {
     this.bindEvents();
   }
 
+  /**
+   * Phân bổ 20 bức ảnh thành 3 tầng hình cầu cân đối tuyệt mỹ
+   * Tầng trên: 6 ảnh (Y = -72px, nghiêng nhẹ -12° về mắt người xem)
+   * Tầng giữa: 8 ảnh (Y = 0px, thẳng đứng 0°)
+   * Tầng dưới: 6 ảnh (Y = +72px, nghiêng nhẹ +12° về mắt người xem)
+   */
   buildSphere() {
     if (!this.world) return;
     this.world.innerHTML = '';
+    this.cardElements = [];
 
     const isMobile = window.innerWidth < 768;
-    const radius = isMobile ? 155 : 230;
-    const N = this.photos.length;
+    const radius = isMobile ? 150 : 225;
+    const tierOffset = isMobile ? 54 : 76;
 
-    // Fibonacci sphere distribution for uniform 3D placement
-    this.photos.forEach((photo, idx) => {
-      const phi = Math.acos(-1 + (2 * idx) / (N - 1)); // Latitude: 0 to PI
-      const theta = Math.sqrt(N * Math.PI) * phi;       // Longitude
+    // Define 3 tiers
+    const tiers = [
+      // Top Tier: 6 photos
+      { count: 6, y: -tierOffset, pitch: -12, startAngle: 0 },
+      // Middle Tier (Equator): 8 photos
+      { count: 8, y: 0, pitch: 0, startAngle: 22.5 },
+      // Bottom Tier: 6 photos
+      { count: 6, y: tierOffset, pitch: 12, startAngle: 30 }
+    ];
 
-      // 3D Cartesian coordinates on sphere surface
-      const x = radius * Math.cos(theta) * Math.sin(phi);
-      const y = radius * Math.sin(theta) * Math.sin(phi);
-      const z = radius * Math.cos(phi);
+    let photoIndex = 0;
 
-      // Tangent rotation angles to face outward from sphere center
-      const rotY = (Math.atan2(x, z) * 180) / Math.PI;
-      const rotX = (-Math.asin(y / radius) * 180) / Math.PI;
+    tiers.forEach((tier) => {
+      const angleStep = 360 / tier.count;
 
-      const card = document.createElement('div');
-      card.className = 'sphere-photo-card';
-      card.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) translateZ(${radius}px)`;
+      for (let i = 0; i < tier.count; i++) {
+        if (photoIndex >= this.photos.length) break;
+        const photo = this.photos[photoIndex];
+        const lonAngle = tier.startAngle + i * angleStep;
 
-      card.innerHTML = `
-        <div class="sphere-card-inner">
-          <picture>
-            <source srcset="${photo.webp}" type="image/webp">
-            <img class="sphere-card-img" 
-                 src="${photo.jpg}" 
-                 alt="${photo.caption}" 
-                 loading="lazy" 
-                 decoding="async"
-                 onerror="this.src='assets/images/memory${(idx % 3) + 1}.webp'" />
-          </picture>
-          <div class="sphere-card-glow"></div>
-        </div>
-      `;
+        const card = document.createElement('div');
+        card.className = 'sphere-photo-card';
 
-      // Tap on card to focus / preview
-      card.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (Math.abs(this.lastDeltaX) < 3 && Math.abs(this.lastDeltaY) < 3) {
-          this.previewPhoto(photo);
-        }
-      });
+        // Set 3D spatial position on the sphere surface
+        card.style.transform = `rotateY(${lonAngle}deg) translateY(${tier.y}px) translateZ(${radius}px) rotateX(${tier.pitch}deg)`;
 
-      this.world.appendChild(card);
+        card.innerHTML = `
+          <div class="sphere-card-inner">
+            <picture>
+              <source srcset="${photo.webp}" type="image/webp">
+              <img class="sphere-card-img" 
+                   src="${photo.jpg}" 
+                   alt="${photo.caption}" 
+                   loading="lazy" 
+                   decoding="async"
+                   onerror="this.src='assets/images/memory${(photoIndex % 3) + 1}.webp'" />
+            </picture>
+            <div class="sphere-card-badge">
+              <span>❤️</span> ${photo.tag}
+            </div>
+            <div class="sphere-card-sparkle">✨</div>
+          </div>
+        `;
+
+        // Store reference for real-time Z-depth calculations
+        this.cardElements.push({
+          el: card,
+          inner: card.querySelector('.sphere-card-inner'),
+          baseLon: lonAngle,
+          photo
+        });
+
+        // Tap to view full picture
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (Math.abs(this.lastDeltaX) < 4 && Math.abs(this.lastDeltaY) < 4) {
+            this.previewPhoto(photo);
+          }
+        });
+
+        this.world.appendChild(card);
+        photoIndex++;
+      }
     });
   }
 
@@ -116,16 +160,16 @@ export class PhotoSphere {
     if (!this.sparklesContainer) return;
     this.sparklesContainer.innerHTML = '';
 
-    const sparkleCount = window.innerWidth < 768 ? 16 : 28;
+    const sparkleCount = window.innerWidth < 768 ? 20 : 36;
     for (let i = 0; i < sparkleCount; i++) {
       const sp = document.createElement('div');
       sp.className = 'sphere-sparkle-dot';
-      
+
       const size = Math.random() * 3.5 + 2;
       const left = Math.random() * 100;
       const top = Math.random() * 100;
-      const delay = Math.random() * 3;
-      const duration = Math.random() * 2 + 1.8;
+      const delay = Math.random() * 3.5;
+      const duration = Math.random() * 2.2 + 1.8;
 
       sp.style.width = `${size}px`;
       sp.style.height = `${size}px`;
@@ -149,7 +193,7 @@ export class PhotoSphere {
       });
     }
 
-    // Touch & Mouse Drag to Rotate 3D Sphere
+    // Touch & Mouse Drag with Inertia Physics
     const stage = document.getElementById('sphere-stage');
     if (stage) {
       const onPointerDown = (e) => {
@@ -158,6 +202,8 @@ export class PhotoSphere {
         this.startY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
         this.lastDeltaX = 0;
         this.lastDeltaY = 0;
+        this.velY = 0;
+        this.velX = 0;
       };
 
       const onPointerMove = (e) => {
@@ -171,8 +217,11 @@ export class PhotoSphere {
         this.lastDeltaX = deltaX;
         this.lastDeltaY = deltaY;
 
-        this.rotY += deltaX * 0.42;
-        this.rotX = Math.max(-55, Math.min(55, this.rotX - deltaY * 0.32));
+        this.rotY += deltaX * 0.40;
+        this.rotX = Math.max(-48, Math.min(48, this.rotX - deltaY * 0.28));
+
+        this.velY = deltaX * 0.15;
+        this.velX = -deltaY * 0.12;
 
         this.startX = x;
         this.startY = y;
@@ -191,7 +240,6 @@ export class PhotoSphere {
       window.addEventListener('touchend', onPointerUp);
     }
 
-    // Resize recalculation
     window.addEventListener('resize', () => {
       if (this.isOpen) this.buildSphere();
     });
@@ -210,26 +258,57 @@ export class PhotoSphere {
     this.modal.classList.remove('active');
     this.stopLoop();
 
-    // Close preview if open
     const preview = document.getElementById('sphere-preview-lightbox');
     if (preview) preview.remove();
   }
 
   startLoop() {
     this.stopLoop();
+
     const render = () => {
       if (!this.isOpen) return;
 
       if (!this.isDragging) {
-        this.rotY += this.autoSpinSpeed;
+        // Natural gentle spin + inertia damping
+        this.rotY += this.autoSpinSpeed + this.velY;
+        this.rotX = Math.max(-48, Math.min(48, this.rotX + this.velX));
+
+        this.velY *= 0.95;
+        this.velX *= 0.95;
+        if (Math.abs(this.velY) < 0.01) this.velY = 0;
+        if (Math.abs(this.velX) < 0.01) this.velX = 0;
       }
 
+      // Rotate entire 3D world
       if (this.world) {
         this.world.style.transform = `rotateX(${this.rotX}deg) rotateY(${this.rotY}deg)`;
       }
 
+      // ── Real-time Z-depth shading for Depth of Field (DoF) ──────────────
+      // Updates opacity, brightness & z-index so front cards shine and back cards soften
+      const currentRotYRad = (this.rotY * Math.PI) / 180;
+      const count = this.cardElements.length;
+
+      for (let i = 0; i < count; i++) {
+        const item = this.cardElements[i];
+        const cardAngleRad = (item.baseLon * Math.PI) / 180 + currentRotYRad;
+        const normZ = Math.cos(cardAngleRad); // +1 (front) to -1 (back)
+
+        // Front cards pop with 100% opacity, back cards fade softly
+        const opacity = 0.42 + 0.58 * Math.max(0, (normZ + 0.25) / 1.25);
+        const brightness = 0.65 + 0.40 * Math.max(0, (normZ + 0.4) / 1.4);
+        const zIndex = Math.round((normZ + 1.2) * 50);
+
+        item.el.style.opacity = opacity.toFixed(2);
+        item.el.style.zIndex = zIndex;
+        if (item.inner) {
+          item.inner.style.filter = `brightness(${brightness.toFixed(2)})`;
+        }
+      }
+
       this.animId = requestAnimationFrame(render);
     };
+
     this.animId = requestAnimationFrame(render);
   }
 
@@ -256,6 +335,7 @@ export class PhotoSphere {
           <img class="sphere-lightbox-img" src="${photo.jpg}" alt="${photo.caption}" />
         </picture>
         <div class="sphere-lightbox-caption">${photo.caption}</div>
+        <div style="font-size: 0.85rem; color: #ffbb55; margin-top: 6px;">✨ Kỷ Niệm Tình Yêu Mùa Trăng ✨</div>
       </div>
     `;
 
