@@ -6,6 +6,7 @@ import { Lantern } from './lantern.js';
 import { DanmakuSystem } from './danmaku.js';
 import { LoveLetter } from './loveLetter.js';
 import { RomanticAudioPlayer } from './audioPlayer.js';
+import { PhotoSphere } from './photoSphere.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Initialize Sky Canvas Background (Stars, Moon, Clouds, Fireflies, Hoa Đăng & Ripples)
@@ -23,24 +24,46 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Initialize Romantic Trending Audio Player
   const audioPlayer = new RomanticAudioPlayer('audio-player-pill');
 
-  // 5. Parse Personalized Data from URL hash (if scanned from QR)
+  // 5. Initialize 3D Photo Sphere Component ("Quả Cầu Kỷ Niệm")
+  const photoSphere = new PhotoSphere();
+
+  // 6. Parse Personalized Data from URL hash (if scanned from QR)
   parseURLPersonalization(loveLetter);
 
-  // 6. Trigger Flower Entrance Animation ("Hoa nhảy ra")
+  // 7. Trigger Flower Entrance Animation ("Hoa nhảy ra")
   triggerFlowerEntrance();
 
-  // 7. Initialize 3D Lantern & Bear Component
+  // 8. Initialize 3D Lantern & Bear Component
   const lantern = new Lantern('lantern-stage', () => {
     // When lantern is clicked, open love letter with sparkle burst!
     loveLetter.open();
   }, skyCanvas);
 
-  // 8. Bind Action Buttons
+  // 9. Bind Action Buttons
   const openLetterBtn = document.getElementById('open-letter-btn');
   if (openLetterBtn) {
     openLetterBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       loveLetter.open();
+    });
+  }
+
+  // Open 3D Photo Sphere Button
+  const openSphereBtn = document.getElementById('open-sphere-btn');
+  if (openSphereBtn) {
+    openSphereBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      photoSphere.open();
+    });
+  }
+
+  // Inside Love Letter: Open 3D Photo Sphere
+  const letterOpenSphereBtn = document.getElementById('letter-open-sphere-btn');
+  if (letterOpenSphereBtn) {
+    letterOpenSphereBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      loveLetter.close();
+      photoSphere.open();
     });
   }
 
@@ -74,7 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
     submitWishBtn.addEventListener('click', () => {
       const wish = wishTextarea.value.trim();
       if (wish) {
-        skyCanvas.releaseHoaDang(window.innerWidth * 0.5, window.innerHeight * 0.7, `Ước: ${wish}`);
+        if (typeof skyCanvas.releaseSkyLantern === 'function') {
+          skyCanvas.releaseSkyLantern(`Bé ước: ${wish}`);
+        } else {
+          skyCanvas.releaseHoaDang(window.innerWidth * 0.5, window.innerHeight * 0.7, `Ước: ${wish}`);
+        }
         danmaku.addCustomMessage(`🌟 Bé ước: ${wish}`);
         loveLetter.showToast('🏮 Điều ước của bé đã bay lên vầng trăng rằm cùng anh!');
         wishTextarea.value = '';

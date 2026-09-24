@@ -657,6 +657,11 @@ html, body {
   .bottom-control-bar {
     bottom: 20px;
     padding: 0 16px;
+    gap: 10px;
+  }
+  .bottom-control-bar .btn-magic {
+    padding: 11px 18px;
+    font-size: 0.88rem;
   }
   .btn-magic {
     padding: 12px 28px;
@@ -671,4 +676,253 @@ html, body {
   .polaroid-frame { width: 95px; padding: 5px 5px 16px; }
   .polaroid-img { height: 80px; }
   .polaroid-caption { font-size: 0.78rem; }
+
+  /* Photo Sphere Mobile */
+  .sphere-modal-container {
+    padding: 18px 10px 12px;
+    height: 82vh;
+  }
+  .sphere-title { font-size: 1.85rem; }
+  .sphere-stage { perspective: 720px; }
+  .sphere-photo-card {
+    left: -31px;
+    top: -43px;
+    width: 62px;
+    height: 86px;
+  }
 }
+
+/* =========================================================================
+   3D PHOTO SPHERE MODAL & STAGE
+   ========================================================================= */
+.sphere-modal-container {
+  background: rgba(14, 18, 44, 0.94);
+  border: 1px solid rgba(255, 221, 128, 0.35);
+  border-radius: 28px;
+  width: 95%;
+  max-width: 600px;
+  height: 84vh;
+  max-height: 680px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(255, 184, 77, 0.25);
+  backdrop-filter: blur(18px);
+  padding: 24px 16px 16px;
+  overflow: hidden;
+}
+
+.sphere-header {
+  text-align: center;
+  margin-bottom: 8px;
+  z-index: 10;
+}
+
+.sphere-title {
+  font-family: var(--font-calligraphy);
+  font-size: 2.3rem;
+  background: linear-gradient(135deg, #fff7d1, #ffdd80, #ff758c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.15;
+}
+
+.sphere-subtitle {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.sphere-stage {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.sphere-stage:active {
+  cursor: grabbing;
+}
+
+/* Glowing central aura behind the sphere */
+.sphere-stage::before {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 120, 0.22) 0%, rgba(255, 107, 139, 0.1) 45%, transparent 70%);
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+.sphere-sparkles-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sphere-sparkle-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff9db;
+  box-shadow: 0 0 8px #ffd700, 0 0 14px rgba(255, 215, 120, 0.8);
+  animation: sparkleTwinkle 2.5s infinite ease-in-out alternate;
+}
+
+@keyframes sparkleTwinkle {
+  0% { transform: scale(0.4); opacity: 0.2; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.4); opacity: 0.2; }
+}
+
+.sphere-3d-world {
+  width: 0;
+  height: 0;
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.sphere-photo-card {
+  position: absolute;
+  left: -42px;
+  top: -58px;
+  width: 84px;
+  height: 116px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: pointer;
+  transform-origin: center center;
+}
+
+.sphere-card-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 221, 128, 0.65);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65), 0 0 10px rgba(255, 215, 120, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+}
+
+.sphere-card-inner:hover {
+  transform: scale(1.15);
+  border-color: #ff6b8b;
+  box-shadow: 0 10px 25px rgba(255, 107, 139, 0.6), 0 0 18px rgba(255, 221, 128, 0.5);
+}
+
+.sphere-card-inner picture,
+.sphere-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sphere-card-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(10, 5, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+.sphere-footer-hint {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-gold);
+  margin-top: 8px;
+  z-index: 10;
+}
+
+/* Lightbox preview when tapping a card */
+.sphere-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.sphere-lightbox-overlay.active {
+  opacity: 1;
+}
+
+.sphere-lightbox-overlay.fade-out {
+  opacity: 0;
+}
+
+.sphere-lightbox-card {
+  background: rgba(18, 22, 54, 0.95);
+  border: 1.5px solid rgba(255, 221, 128, 0.5);
+  border-radius: 20px;
+  padding: 16px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 107, 139, 0.4);
+  animation: popScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popScale {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.sphere-lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.sphere-lightbox-img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.sphere-lightbox-caption {
+  font-family: var(--font-handwriting);
+  font-size: 1.2rem;
+  color: #ffdd80;
+  margin-top: 12px;
+}
+
+/* Sphere Button Styling */
+.btn-sphere {
+  background: linear-gradient(135deg, rgba(247, 183, 49, 0.35), rgba(255, 107, 139, 0.35)) !important;
+  border: 1px solid rgba(255, 221, 128, 0.5) !important;
+  box-shadow: 0 6px 20px rgba(247, 183, 49, 0.35) !important;
+}
+
+.btn-sphere:hover {
+  box-shadow: 0 8px 25px rgba(255, 107, 139, 0.5) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+}
+

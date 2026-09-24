@@ -190,6 +190,28 @@ export class SkyCanvas {
     });
   }
 
+  releaseSkyLantern(customWish = '') {
+    const x = this.width * (0.35 + Math.random() * 0.3);
+    const y = this.height * 0.82;
+    this.ripples.push({ x, y, radius: 8, maxRadius: 85, opacity: 0.9, speed: 2.2 });
+    this.createSparkleBurst(x, y - 25, 26);
+    this.triggerBlossomBurst(x, y - 75);
+
+    this.hoaDangs.push({
+      x, y,
+      speed: Math.random() * 0.35 + 0.95,
+      swaySpeed: 0.016,
+      swayAngle: Math.random() * Math.PI,
+      swayAmount: 0.95,
+      size: 34,
+      opacity: 1,
+      z: 1.25,
+      text: customWish,
+      glow: true,
+      isBackground: false
+    });
+  }
+
   createSparkleBurst(x, y, count = 18) {
     const colors = ['#fff2b2', '#ffdd80', '#ff6b8b', '#ffa8ba', '#ffffff'];
     for (let i = 0; i < count; i++) {
@@ -466,11 +488,25 @@ export class SkyCanvas {
       this._drawSquareLantern(cx, l.y, l.size, now, l.x);
 
       if (l.text) {
-        this.ctx.font      = 'bold 12px Quicksand, sans-serif';
-        this.ctx.fillStyle = '#fff7d1';
+        this.ctx.save();
+        this.ctx.font = '600 12px Quicksand, sans-serif';
+        const txt = l.text.length > 28 ? l.text.slice(0, 26) + '...' : l.text;
+        const tw = this.ctx.measureText(txt).width;
+        const ty = l.y - l.size * 1.8;
+
+        // Wish ribbon pill background
+        this.ctx.fillStyle = 'rgba(20, 10, 5, 0.7)';
+        this.ctx.strokeStyle = 'rgba(255, 215, 120, 0.65)';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.roundRect(cx - tw / 2 - 8, ty - 14, tw + 16, 20, 10);
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        this.ctx.fillStyle = '#fff9db';
         this.ctx.textAlign = 'center';
-        this.ctx.globalAlpha = l.opacity;
-        this.ctx.fillText(l.text, cx, l.y - l.size * 1.9);
+        this.ctx.fillText(txt, cx, ty);
+        this.ctx.restore();
       }
       this.ctx.restore();
     }

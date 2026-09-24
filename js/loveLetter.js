@@ -62,22 +62,48 @@ export class LoveLetter {
     const sendWishBtn = document.getElementById('send-wish-btn');
     const wishInput = document.getElementById('wish-input');
     if (sendWishBtn && wishInput) {
-      sendWishBtn.addEventListener('click', () => {
-        const wish = wishInput.value.trim();
-        if (wish) {
-          if (this.skyCanvas) {
-            this.skyCanvas.releaseSkyLantern(`Ước: ${wish}`);
-          }
-          if (this.danmaku) {
-            this.danmaku.addCustomMessage(`🌟 ${wish}`);
-          }
-          wishInput.value = '';
-          this.showToast('🏮 Đèn trời mang điều ước của bạn đã bay lên cung trăng!');
-          this.close();
+      const handleSendWish = () => {
+        let wish = wishInput.value.trim();
+        if (!wish) {
+          wish = 'Mong đôi mình luôn bình an, rạng rỡ và hạnh phúc bên nhau! ❤️';
         }
-      });
+
+        // Release lantern in sky canvas
+        if (this.skyCanvas) {
+          if (typeof this.skyCanvas.releaseSkyLantern === 'function') {
+            this.skyCanvas.releaseSkyLantern(wish);
+          } else if (typeof this.skyCanvas.releaseHoaDang === 'function') {
+            this.skyCanvas.releaseHoaDang(window.innerWidth * 0.5, window.innerHeight * 0.85, wish);
+          }
+        }
+
+        // Send to floating danmaku messages
+        if (this.danmaku) {
+          this.danmaku.addCustomMessage(`🏮 ${wish}`);
+        }
+
+        // Button visual feedback
+        const oldText = sendWishBtn.innerHTML;
+        sendWishBtn.disabled = true;
+        sendWishBtn.innerHTML = '<span>🏮</span> Đã Thả Đèn ✨';
+
+        // Show romantic floating toast
+        this.showToast('🏮 Đèn trời mang điều ước của bạn đã bay lên cung trăng rằm!');
+
+        // Clear input
+        wishInput.value = '';
+
+        // Smoothly close modal after a brief moment so user can watch the lantern rise
+        setTimeout(() => {
+          this.close();
+          sendWishBtn.disabled = false;
+          sendWishBtn.innerHTML = oldText;
+        }, 500);
+      };
+
+      sendWishBtn.addEventListener('click', handleSendWish);
       wishInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendWishBtn.click();
+        if (e.key === 'Enter') handleSendWish();
       });
     }
   }

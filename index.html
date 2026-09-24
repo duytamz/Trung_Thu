@@ -57,6 +57,9 @@
       <button class="btn-magic" id="open-letter-btn">
         <span>💌</span> Mở Bức Thư Tình
       </button>
+      <button class="btn-magic btn-sphere" id="open-sphere-btn">
+        <span>🪐</span> Quả Cầu Kỷ Niệm
+      </button>
     </footer>
   </div>
 
@@ -70,10 +73,16 @@
         <div class="letter-subtitle" id="letter-lover-name">Gửi Em Bé Của Anh 💕</div>
       </div>
 
-
       <!-- Polaroid Memory Photos Gallery -->
       <div class="polaroid-gallery" id="polaroid-gallery">
         <!-- Rendered by js/loveLetter.js -->
+      </div>
+
+      <!-- Mini Button to open full 3D Photo Sphere -->
+      <div style="text-align: center; margin-top: -12px; margin-bottom: 20px;">
+        <button class="btn-magic btn-sphere" id="letter-open-sphere-btn" style="padding: 7px 18px; font-size: 0.85rem;">
+          <span>🪐</span> Xem Toàn Bộ Quả Cầu Kỷ Niệm 3D
+        </button>
       </div>
 
       <!-- Love Letter Text -->
@@ -90,6 +99,31 @@
           <input type="text" class="wish-input" id="wish-input" placeholder="Nhập điều ước của em..." maxlength="45" />
           <button class="btn-magic" id="send-wish-btn" style="padding: 8px 18px;">Thả Đèn</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Photo Sphere Modal ("Quả cầu kỷ niệm") -->
+  <div class="modal-overlay" id="photo-sphere-modal">
+    <div class="sphere-modal-container">
+      <button class="modal-close-btn" id="sphere-close-btn">✕</button>
+      
+      <div class="sphere-header">
+        <h2 class="sphere-title">🪐 Quả Cầu Kỷ Niệm 🪐</h2>
+        <p class="sphere-subtitle">Chạm và vuốt để xoay 360° ngắm nhìn những khoảnh khắc của đôi mình ✨</p>
+      </div>
+
+      <!-- 3D Sphere Stage -->
+      <div class="sphere-stage" id="sphere-stage">
+        <!-- Floating Sparkles -->
+        <div class="sphere-sparkles-container" id="sphere-sparkles"></div>
+        
+        <!-- Rotating 3D World -->
+        <div class="sphere-3d-world" id="sphere-3d-world"></div>
+      </div>
+
+      <div class="sphere-footer-hint">
+        💡 <em>Chạm vào ảnh bất kỳ để xem kỷ niệm ngọt ngào</em>
       </div>
     </div>
   </div>
