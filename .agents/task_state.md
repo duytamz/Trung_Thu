@@ -11,3 +11,5 @@
   - [x] Bỏ khối đếm ngày yêu nhau "CHÚNG MÌNH ĐÃ BÊN NHAU" theo yêu cầu người dùng, đã đồng bộ lên GitHub (`5067930`).
   - [x] Điều chỉnh nội dung dành cho người yêu là con trai (xưng em / anh là top che chở) & xuất mã QR quà tặng trực tuyến (`211483e`).
   - [x] Lược bớt nút thừa (bỏ Mã QR trên trang chính, bỏ nút điều ước phụ, bỏ text hint lồng đèn, thu gọn nút nhạc), tối ưu 60 FPS mượt mà cho điện thoại yếu (`c4cb6ae`).
+  - [x] Tạo tạo hình Bánh Trung Thu Hoàng Kim 3D ở bên ngoài và Mã QR dẫn đến trang web ở chính giữa (chuẩn quét Zalo/Camera 100%, hỗ trợ tải ảnh PNG).
+  - [x] Tối ưu và đưa 3 ảnh kỷ niệm người dùng cung cấp vào Bức Thư Mùa Trăng (nén WebP/JPG chỉ còn ~52KB tổng cộng, lazy-loading, mượt 60 FPS trên điện thoại yếu).

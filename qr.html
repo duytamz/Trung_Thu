@@ -105,10 +105,10 @@
 </head>
 <body>
   <div class="qr-card-container">
-    <div class="qr-badge">💌 Món Quà Trao Bé</div>
-    <h1 class="qr-page-title">Mã QR Quà Tặng Trung Thu</h1>
+    <div class="qr-badge">🥮 Món Quà Trao Bé</div>
+    <h1 class="qr-page-title">Bánh Trung Thu Mã QR</h1>
     <p class="qr-page-desc">
-      Quét mã trên <strong>Zalo</strong> hoặc <strong>Camera điện thoại</strong> để mở trang quà tặng lãng mạn dành riêng cho em bé!
+      Bên ngoài là <strong>Bánh Trung Thu Hoàng Kim</strong>, ở giữa là <strong>Mã QR</strong>. Quét trên <strong>Zalo</strong> hoặc <strong>Camera điện thoại</strong> để mở thế giới quà tặng lãng mạn dành riêng cho em bé!
     </p>
 
     <div class="canvas-wrapper">
@@ -144,8 +144,8 @@
       const targetURL = 'https://duytamz.github.io/Trung_Thu/';
       document.getElementById('target-url-text').textContent = targetURL;
 
-      // Draw gift card for boyfriend with top persona
-      qrGen.drawGiftCard(targetURL, 'Em Bé Của Anh', 'Anh');
+      // Draw 3D Mooncake with Center QR code
+      qrGen.update(targetURL, 'Em Bé Của Anh', 'Anh');
 
       document.getElementById('download-card-btn').addEventListener('click', () => {
         qrGen.downloadCardImage();

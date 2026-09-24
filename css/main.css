@@ -445,6 +445,12 @@ html, body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   cursor: pointer;
+  transform: translateZ(0);
+}
+
+.polaroid-frame picture {
+  display: block;
+  width: 100%;
 }
 
 .polaroid-frame:nth-child(1) { transform: rotate(-4deg); }

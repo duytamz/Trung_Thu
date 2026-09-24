@@ -15,9 +15,24 @@ export class LoveLetter {
       letterTitle: 'Bức Thư Mùa Trăng',
       letterContent: options.letterContent || `Gửi em - chàng trai anh yêu thương nhất,\n\nTrung Thu này không chỉ có ánh trăng tròn và lồng đèn rực rỡ, mà còn có em - món quà tuyệt vời nhất mà cuộc đời đã mang đến cho anh.\n\nCảm ơn em vì đã luôn dịu dàng, luôn mang lại nụ cười và sự ấm áp cho anh mỗi ngày. Chúc cho em bé của anh một mùa Tết Trung Thu thật nhiều niềm vui, luôn rạng rỡ và an yên.\n\nMong rằng dù bao mùa trăng nữa đi qua, đôi bàn tay này vẫn sẽ luôn nắm chặt lấy tay em và chở che cho em.\n\nYêu em thật nhiều! ❤️`,
       photos: options.photos || [
-        { url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&auto=format&fit=crop&q=80', caption: 'Kỷ niệm ngọt ngào' },
-        { url: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=400&auto=format&fit=crop&q=80', caption: 'Cùng em ngắm trăng' },
-        { url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&auto=format&fit=crop&q=80', caption: 'Mãi bên nhau nhé' }
+        {
+          webp: 'assets/images/memory1.webp',
+          jpg: 'assets/images/memory1.jpg',
+          url: 'assets/images/memory1.webp',
+          caption: 'Kỷ niệm ngọt ngào'
+        },
+        {
+          webp: 'assets/images/memory2.webp',
+          jpg: 'assets/images/memory2.jpg',
+          url: 'assets/images/memory2.webp',
+          caption: 'Cùng em ngắm trăng'
+        },
+        {
+          webp: 'assets/images/memory3.webp',
+          jpg: 'assets/images/memory3.jpg',
+          url: 'assets/images/memory3.webp',
+          caption: 'Mãi bên nhau nhé'
+        }
       ]
     };
 
@@ -82,9 +97,17 @@ export class LoveLetter {
     if (!gallery) return;
 
     gallery.innerHTML = this.config.photos.map((p, idx) => `
-      <div class="polaroid-frame">
+      <div class="polaroid-frame" data-idx="${idx}">
         <div class="polaroid-tape"></div>
-        <img class="polaroid-img" src="${p.url}" alt="Memory ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&auto=format&fit=crop&q=80'" />
+        <picture>
+          <source srcset="${p.webp || p.url}" type="image/webp">
+          <img class="polaroid-img" 
+               src="${p.jpg || p.url}" 
+               alt="Kỷ niệm ${idx + 1}" 
+               loading="lazy" 
+               decoding="async"
+               onerror="this.src='assets/images/memory${idx + 1}.jpg'" />
+        </picture>
         <div class="polaroid-caption">${p.caption}</div>
       </div>
     `).join('');
