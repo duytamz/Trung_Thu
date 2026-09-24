@@ -11,6 +11,15 @@ export class QRGenerator {
       loverName: 'Em Bé Của Anh',
       senderName: 'Anh'
     };
+    
+    // Nạp sẵn ảnh bánh trung thu thực tế tối ưu tốc độ (<190KB)
+    this.mooncakeImg = new Image();
+    this.mooncakeImg.src = 'assets/images/mooncake_base_800.webp';
+    this.mooncakeImg.onload = () => {
+      if (this.currentMode === 'mooncake') {
+        this.render();
+      }
+    };
   }
 
   setMode(mode) {
@@ -37,99 +46,78 @@ export class QRGenerator {
   }
 
   /**
-   * Chế độ 1: Bánh Trung Thu Hoàng Kim Độc Bản (Standalone 3D Mooncake with Center QR)
+   * Chế độ 1: Bánh Trung Thu Hoàng Kim Độc Bản (CHỈ CÓ BÁNH & MÃ QR ĐỒNG NHẤT MÀU NƯỚNG)
+   * Tuyệt đối không có chữ, thiệp hay đồ vật ngoại cảnh
    */
   drawMooncakeQR(url, loverName = 'Em Bé Của Anh', senderName = 'Anh') {
     if (!this.canvas || !this.ctx) return;
 
-    const w = 580;
-    const h = 620;
-    this.canvas.width = w;
-    this.canvas.height = h;
+    // Kích thước vuông 800x800 chuẩn in ấn sắc nét
+    const size = 800;
+    this.canvas.width = size;
+    this.canvas.height = size;
     const ctx = this.ctx;
 
-    // 1. Festive Dark Midnight Sky Background with Starlight Aura
-    const bgGrad = ctx.createRadialGradient(w / 2, h / 2 - 20, 50, w / 2, h / 2, 380);
-    bgGrad.addColorStop(0, '#161c3d');
-    bgGrad.addColorStop(0.5, '#0e122b');
-    bgGrad.addColorStop(1, '#050713');
-    ctx.fillStyle = bgGrad;
-    ctx.beginPath();
-    ctx.roundRect(0, 0, w, h, 24);
-    ctx.fill();
+    // Xóa sạch canvas: Chỉ hiển thị duy nhất Bánh Trung Thu và Mã QR
+    ctx.clearRect(0, 0, size, size);
 
-    // Subtle golden starry dust
-    this.drawFestiveSparkles(ctx, w, h);
+    const cx = size / 2;
+    const cy = size / 2;
+    const qrSize = 182; // Tỉ lệ cân đối chính xác tại tâm bánh
 
-    // Glowing Full Moon Halo behind the Mooncake
-    const cx = w / 2;
-    const cy = 285;
-    const moonHalo = ctx.createRadialGradient(cx, cy, 140, cx, cy, 260);
-    moonHalo.addColorStop(0, 'rgba(255, 215, 120, 0.22)');
-    moonHalo.addColorStop(0.6, 'rgba(255, 180, 80, 0.08)');
-    moonHalo.addColorStop(1, 'rgba(255, 180, 80, 0)');
-    ctx.fillStyle = moonHalo;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 260, 0, Math.PI * 2);
-    ctx.fill();
+    // Màu mã QR đồng nhất tuyệt đối với màu bánh trung thu nướng:
+    // Nền: #fae1b4 (Màu vỏ bột bánh nướng vàng mật ong)
+    // Module: #220b01 (Màu caramel cánh gián nướng kỹ, tương phản quang học 100% quét được)
+    const mooncakeQRColors = {
+      dark: '#220b01',
+      light: '#fae1b4'
+    };
 
-    // 2. Top Calligraphy Header
+    this.generateQRCanvas(
+      url,
+      qrSize,
+      (qrCanvas) => {
+        if (this.mooncakeImg && this.mooncakeImg.complete && this.mooncakeImg.naturalWidth > 0) {
+          // 1. Vẽ chiếc Bánh Trung Thu độc bản
+          ctx.drawImage(this.mooncakeImg, 0, 0, size, size);
+          // 2. Vẽ mã QR đồng nhất màu nướng tại tâm bánh
+          this.drawQRMedallion(ctx, cx, cy, qrCanvas, qrSize);
+        } else {
+          // Fallback: Vẽ bánh trung thu 3D procedural với màu sắc đồng nhất
+          this.draw3DMooncake(ctx, cx, cy, 330, qrCanvas, qrSize, true);
+        }
+      },
+      mooncakeQRColors
+    );
+  }
+
+  /**
+   * Vẽ khung và mã QR đồng nhất màu nướng tại tâm bánh
+   */
+  drawQRMedallion(ctx, cx, cy, qrCanvas, qrSize) {
     ctx.save();
-    ctx.textAlign = 'center';
-    
-    // Badge
-    ctx.font = '600 12px Quicksand, sans-serif';
-    ctx.fillStyle = '#ffbb55';
-    ctx.fillText('✨ MÙA TRĂNG ĐOÀN VIÊN • TẾT TRUNG THU ✨', cx, 40);
+    const frameSize = qrSize + 14;
+    const halfFrame = frameSize / 2;
+    const halfQR = qrSize / 2;
 
-    // Main Title
-    ctx.font = 'bold 32px Caveat, cursive';
-    ctx.fillStyle = '#fff4ce';
-    ctx.shadowColor = 'rgba(255, 215, 120, 0.6)';
-    ctx.shadowBlur = 15;
-    ctx.fillText('🥮 Bánh Trung Thu Tình Yêu 🥮', cx, 74);
+    // Khung viền nướng ấm ăn nhập hoàn hảo với vỏ bánh
+    ctx.fillStyle = '#99510e';
+    ctx.beginPath();
+    ctx.roundRect(cx - halfFrame, cy - halfFrame, frameSize, frameSize, 10);
+    ctx.fill();
+
+    ctx.strokeStyle = '#f3c47a';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Dán mã QR màu bột nướng mật ong & caramel
+    if (qrCanvas) {
+      ctx.drawImage(qrCanvas, cx - halfQR, cy - halfQR, qrSize, qrSize);
+    }
+
+    // Tâm mã QR: mini seal mật ong với trái tim ấm áp
+    this.drawCenterEmblem(ctx, cx, cy, qrSize * 0.20, '#fae1b4');
     ctx.restore();
-
-    // 3. Generate QR code on offscreen canvas and draw 3D Mooncake
-    this.generateQRCanvas(url, 172, (qrCanvas) => {
-      this.draw3DMooncake(ctx, cx, cy, 182, qrCanvas, 172);
-
-      // 4. Bottom Message & Scan Instructions
-      ctx.save();
-      ctx.textAlign = 'center';
-
-      // Lover Dedication
-      ctx.font = 'bold 22px Caveat, cursive';
-      ctx.fillStyle = '#ffa8ba';
-      ctx.shadowColor = 'rgba(255, 107, 139, 0.5)';
-      ctx.shadowBlur = 10;
-      ctx.fillText(`Dành riêng cho: ${loverName} ❤️`, cx, 505);
-
-      // Scan Instructions Pill
-      ctx.shadowBlur = 0;
-      const pillW = 420;
-      const pillH = 34;
-      const pillX = cx - pillW / 2;
-      const pillY = 525;
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-      ctx.strokeStyle = 'rgba(255, 221, 128, 0.3)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.roundRect(pillX, pillY, pillW, pillH, 17);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.font = '600 13px Quicksand, sans-serif';
-      ctx.fillStyle = '#fffdf5';
-      ctx.fillText('📱 Dùng Zalo hoặc Camera quét mã ở giữa bánh để mở quà', cx, pillY + 22);
-
-      // Sender Sign-off
-      ctx.font = 'italic 13px Quicksand, sans-serif';
-      ctx.fillStyle = '#f5cd79';
-      ctx.fillText(`Gửi gắm ngàn yêu thương từ: ${senderName} ✨`, cx, 588);
-      ctx.restore();
-    });
   }
 
   /**
@@ -339,30 +327,30 @@ export class QRGenerator {
     const halfFrame = frameSize / 2;
 
     // Deep embossed wooden frame backing
-    ctx.fillStyle = '#3a1200';
+    ctx.fillStyle = uniformColor ? '#99510e' : '#3a1200';
     ctx.beginPath();
     ctx.roundRect(cx - halfFrame, cy - halfFrame, frameSize, frameSize, 14);
     ctx.fill();
 
     // Golden frame border
-    ctx.strokeStyle = 'rgba(255, 221, 128, 0.85)';
+    ctx.strokeStyle = uniformColor ? '#f3c47a' : 'rgba(255, 221, 128, 0.85)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Pure white QR background for 100% scan contrast
+    // QR background đồng nhất màu nướng
     const halfQR = qrSize / 2;
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = uniformColor ? '#fae1b4' : '#ffffff';
     ctx.beginPath();
     ctx.roundRect(cx - halfQR, cy - halfQR, qrSize, qrSize, 8);
     ctx.fill();
 
-    // Draw the high-contrast QR Code
+    // Draw the QR Code
     if (qrCanvas) {
       ctx.drawImage(qrCanvas, cx - halfQR, cy - halfQR, qrSize, qrSize);
     }
 
     // I. Center Heart / Mooncake Emblem (Icon trái tim hoàng kim ở tâm mã QR)
-    this.drawCenterEmblem(ctx, cx, cy, qrSize * 0.21);
+    this.drawCenterEmblem(ctx, cx, cy, qrSize * 0.21, uniformColor ? '#fae1b4' : '#ffffff');
 
     ctx.restore();
   }
@@ -415,24 +403,24 @@ export class QRGenerator {
     });
   }
 
-  drawCenterEmblem(ctx, cx, cy, size) {
+  drawCenterEmblem(ctx, cx, cy, size, bgColor = '#fae1b4') {
     ctx.save();
 
-    // Protective backing circle to keep QR code reading pristine
-    ctx.fillStyle = '#ffffff';
+    // Vành bảo vệ giữ nguyên độ nhận diện 100% của QR
+    ctx.fillStyle = bgColor;
     ctx.beginPath();
     ctx.arc(cx, cy, size * 0.82, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = '#e67e22';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#99510e';
+    ctx.lineWidth = 1.6;
     ctx.stroke();
 
     // 3D Red Ruby Heart Icon
     ctx.translate(cx, cy);
-    ctx.fillStyle = '#ff1744';
-    ctx.shadowColor = '#ff5252';
-    ctx.shadowBlur = 8;
+    ctx.fillStyle = '#c0392b';
+    ctx.shadowColor = '#e74c3c';
+    ctx.shadowBlur = 6;
 
     ctx.beginPath();
     const s = size * 0.55;
@@ -450,7 +438,7 @@ export class QRGenerator {
     ctx.restore();
   }
 
-  generateQRCanvas(url, qrSize, callback) {
+  generateQRCanvas(url, qrSize, callback, customColor = null) {
     if (!window.QRCodeBundle) {
       console.error('QRCodeBundle library not found!');
       return;
@@ -463,7 +451,7 @@ export class QRGenerator {
       {
         errorCorrectionLevel: 'H', // Error correction level H allows center emblem without losing scanning capability
         margin: 1,
-        color: {
+        color: customColor || {
           dark: '#000000', // Crisp 100% black modules for instant Zalo/Camera detection
           light: '#ffffff'
         },

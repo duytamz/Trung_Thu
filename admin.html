@@ -160,7 +160,7 @@
       <!-- Style Selector -->
       <div class="style-toggle-container">
         <button class="style-toggle-btn active" id="btn-mode-mooncake">
-          <span>🥮</span> Bánh Trung Thu Hoàng Kim
+          <span>🥮</span> Bánh Trung Thu (Chỉ Bánh & QR Đồng Màu)
         </button>
         <button class="style-toggle-btn" id="btn-mode-card">
           <span>💌</span> Thẻ Quà Tặng Bánh QR
@@ -171,7 +171,10 @@
 
       <div class="btn-group">
         <button class="btn-magic" id="download-card-btn">
-          <span>📥</span> Tải Ảnh Bánh Trung Thu QR (In Ấn/Zalo)
+          <span>📥</span> Tải Ảnh Bánh Trung Thu QR (In Ấn / Zalo)
+        </button>
+        <button class="btn-magic" id="download-transparent-btn" style="background: rgba(247, 183, 49, 0.25);">
+          <span>✨</span> Tải Bản Nền Trong Suốt (PNG)
         </button>
         <button class="btn-magic" id="copy-link-btn" style="background: rgba(255, 255, 255, 0.15);">
           <span>📋</span> Sao Chép Link
@@ -293,6 +296,13 @@ Yêu em thật nhiều! ❤️</textarea>
 
       btnDownload.addEventListener('click', () => {
         qrGen.downloadCardImage();
+      });
+
+      document.getElementById('download-transparent-btn').addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = 'Banh_Trung_Thu_Ma_QR_TrongSuot.png';
+        link.href = 'assets/images/Banh_Trung_Thu_Ma_QR_TrongSuot.png';
+        link.click();
       });
 
       document.getElementById('copy-link-btn').addEventListener('click', () => {
