@@ -685,19 +685,19 @@ html, body {
   }
   .sphere-title { font-size: 1.8rem; }
   .sphere-subtitle { font-size: 0.8rem; margin-top: 2px; }
-  .sphere-stage { perspective: 720px; }
+  .sphere-stage { perspective: 800px; }
   .sphere-photo-card {
-    left: -36px;
-    top: -51px;
-    width: 72px;
-    height: 102px;
+    left: -29px;
+    top: -41px;
+    width: 58px;
+    height: 82px;
   }
   .sphere-card-inner {
-    border-radius: 12px;
+    border-radius: 10px;
     border-width: 1.5px;
   }
   .sphere-card-badge {
-    font-size: 0.60rem;
+    font-size: 0.58rem;
     padding: 2px 5px;
     bottom: 3px;
   }
@@ -707,16 +707,16 @@ html, body {
     right: 4px;
   }
   .sphere-lunar-core {
-    width: 110px;
-    height: 110px;
+    width: 90px;
+    height: 90px;
   }
   .sphere-orbital-ring {
     width: 360px;
     height: 360px;
   }
   .sphere-orbital-ring.ring-2 {
-    width: 390px;
-    height: 390px;
+    width: 380px;
+    height: 380px;
   }
 }
 
@@ -780,27 +780,26 @@ html, body {
   cursor: grabbing;
 }
 
-/* Glowing central aura behind the sphere */
+/* 3D Glowing Crystal Moon Orb at Center */
 .sphere-lunar-core {
   position: absolute;
-  width: 140px;
-  height: 140px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: radial-gradient(circle, 
-    rgba(255, 255, 230, 0.95) 0%,
-    rgba(255, 220, 130, 0.65) 25%,
-    rgba(255, 140, 60, 0.3) 55%,
-    rgba(255, 107, 139, 0.12) 75%,
-    transparent 85%
+  background: radial-gradient(circle at 35% 35%, 
+    rgba(255, 255, 235, 0.95) 0%, 
+    rgba(255, 230, 140, 0.75) 40%, 
+    rgba(247, 183, 49, 0.35) 70%, 
+    transparent 95%
   );
-  box-shadow: 0 0 50px rgba(255, 220, 120, 0.6), 0 0 100px rgba(255, 107, 139, 0.3);
+  box-shadow: 0 0 45px rgba(255, 220, 120, 0.65), 0 0 85px rgba(255, 107, 139, 0.25);
   pointer-events: none;
   animation: corePulse 3.5s infinite ease-in-out alternate;
-  z-index: 1;
+  z-index: 100;
 }
 
 @keyframes corePulse {
-  0% { transform: scale(0.92); opacity: 0.75; }
+  0% { transform: scale(0.92); opacity: 0.85; }
   100% { transform: scale(1.08); opacity: 1; }
 }
 
@@ -815,7 +814,7 @@ html, body {
   transform: rotateX(72deg) rotateY(18deg);
   pointer-events: none;
   animation: ringRotate 28s infinite linear;
-  z-index: 1;
+  z-index: 90;
 }
 
 .sphere-orbital-ring.ring-2 {
@@ -824,6 +823,7 @@ html, body {
   border: 1px dotted rgba(255, 140, 160, 0.3);
   transform: rotateX(65deg) rotateY(-25deg);
   animation: ringRotateReverse 36s infinite linear;
+  z-index: 85;
 }
 
 @keyframes ringRotate {
@@ -862,24 +862,20 @@ html, body {
   width: 0;
   height: 0;
   position: relative;
-  transform-style: preserve-3d;
   will-change: transform;
   z-index: 5;
 }
 
 .sphere-photo-card {
   position: absolute;
-  left: -48px;
-  top: -68px;
-  width: 96px;
-  height: 136px;
-  transform-style: preserve-3d;
+  left: -38px;
+  top: -53px;
+  width: 76px;
+  height: 106px;
   will-change: transform, opacity;
   cursor: pointer;
   transform-origin: center center;
   transition: opacity 0.15s ease;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .sphere-card-inner {

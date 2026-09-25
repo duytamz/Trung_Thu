@@ -1,9 +1,10 @@
 /**
- * PhotoSphere Component v3.0 - Quả Cầu Kỷ Niệm 3D Tinh Tú (Geodesic Spherical Mesh)
- * - Cấu trúc 4 tầng Geodesic Spherical Coordinate Rings (4 + 6 + 6 + 4 = 20 ảnh)
- * - Chuẩn toán học hình cầu không gian: Tuyệt đối KHÔNG đè chồng chéo, không méo cạnh
- * - 3D Real-time Depth Sorting & Backface Culling: Mặt trước sáng rạng ngời, mặt sau ẩn tinh tế
- * - Chạm / Vuốt đa điểm siêu mượt mà với quán tính vật lý (Inertia Physics), 60 FPS trên mobile
+ * PhotoSphere Component v5.0 - Quả Cầu Kỷ Niệm Mùa Trăng 3D (Royal Spherical Globe)
+ * - Mô phỏng chuẩn mực quà tặng Trung Thu 3D trên TikTok: Lồng Đèn Quả Cầu Trăng Rằm 3D
+ * - 20 ảnh phân bổ 3 tầng hình cầu đối xứng hoàng gia: 5 (chóp trên) + 10 (xích đạo) + 5 (chóp dưới)
+ * - Tọa độ 3D chuyển động theo quỹ đạo cầu hoàn hảo, các thẻ ảnh luôn thẳng thớm ngay ngắn (tuyệt đối không méo mó, không lộn xộn)
+ * - Lõi Ánh Trăng Pha Lê trong trẻo ở tâm (z-index 100), phân tầng trước sau sống động
+ * - Tương tác vuốt 360° mượt mà, quán tính tự nhiên, tối ưu 60 FPS trên điện thoại
  */
 export class PhotoSphere {
   constructor() {
@@ -15,21 +16,19 @@ export class PhotoSphere {
     this.isOpen = false;
     this.animId = null;
 
-    // Rotation angles
+    // Góc xoay (tính bằng radian)
     this.rotY = 0;
-    this.rotX = -6;
-    this.autoSpinSpeed = 0.20;
+    this.rotX = -0.08;
+    this.autoSpinSpeed = 0.0055;
 
-    // Pointer drag physics
+    // Vật lý kéo vuốt (Pointer drag physics)
     this.isDragging = false;
     this.startX = 0;
     this.startY = 0;
     this.lastDeltaX = 0;
     this.lastDeltaY = 0;
-    this.velY = 0.20;
+    this.velY = 0;
     this.velX = 0;
-
-    this.currentR = 175;
 
     // Sweet captions for each photo
     const captions = [
@@ -68,6 +67,7 @@ export class PhotoSphere {
     }
 
     this.cardElements = [];
+    this.maxR = 175;
     this.init();
   }
 
@@ -78,12 +78,11 @@ export class PhotoSphere {
   }
 
   /**
-   * Phân bổ 20 bức ảnh thành 4 tầng Geodesic Spherical Coordinate Rings
-   * Đối xứng hoàn mỹ, khoảng cách đều đặn, không chồng chéo:
-   * - Tầng 1 (Chóp trên): 4 ảnh (lat = +38°, pitch = -18°)
-   * - Tầng 2 (Bán cầu trên): 6 ảnh (lat = +12°, pitch = -6°)
-   * - Tầng 3 (Bán cầu dưới): 6 ảnh (lat = -12°, pitch = +6°)
-   * - Tầng 4 (Chóp dưới): 4 ảnh (lat = -38°, pitch = +18°)
+   * Phân bổ 20 bức ảnh thành 3 tầng hình cầu đối xứng hoàng gia
+   * Tạo nên khối cầu tròn đầy, trật tự tuyệt đối, không trùng lặp, không lộn xộn:
+   * - Tầng trên: 5 ảnh (Y = -76px, r = 118px)
+   * - Tầng xích đạo: 10 ảnh (Y = 0px, r = 176px - nở rộng tạo dáng quả cầu)
+   * - Tầng dưới: 5 ảnh (Y = +76px, r = 118px)
    */
   buildSphere() {
     if (!this.world) return;
@@ -91,43 +90,32 @@ export class PhotoSphere {
     this.cardElements = [];
 
     const isMobile = window.innerWidth < 768;
-    // Bán kính quả cầu mở rộng giúp thẻ ảnh to rõ và không gian thông thoáng
-    this.currentR = isMobile ? 195 : 265;
-    const R = this.currentR;
+    const scaleFactor = isMobile ? 1.0 : 1.38;
 
-    // Chuẩn toán học hình cầu 4 tầng
+    this.maxR = Math.round(176 * scaleFactor);
+
+    // Định nghĩa 3 tầng đối xứng hình cầu hoàn mỹ
     const tiers = [
-      // Tầng 1 (Chóp trên): 4 ảnh, cách nhau 90°
+      // Tầng trên (Chóp Vòm): 5 ảnh, bán kính nhỏ 118px
       {
-        count: 4,
-        y: Math.round(-R * 0.60),
-        r: Math.round(R * 0.80),
-        pitch: -15,
+        count: 5,
+        y: Math.round(-76 * scaleFactor),
+        r: Math.round(118 * scaleFactor),
         startAngle: 0
       },
-      // Tầng 2 (Bán cầu trên): 6 ảnh, cách nhau 60°, so le 30°
+      // Tầng xích đạo: 10 ảnh, bán kính nở rộng 176px tạo dáng quả cầu tròn xoe
       {
-        count: 6,
-        y: Math.round(-R * 0.20),
-        r: Math.round(R * 0.98),
-        pitch: -5,
-        startAngle: 30
+        count: 10,
+        y: 0,
+        r: Math.round(176 * scaleFactor),
+        startAngle: 18 // so le hoàn hảo với tầng trên và tầng dưới
       },
-      // Tầng 3 (Bán cầu dưới): 6 ảnh, cách nhau 60°, so le 0°
+      // Tầng dưới (Đáy Vòm): 5 ảnh, bán kính nhỏ 118px
       {
-        count: 6,
-        y: Math.round(R * 0.20),
-        r: Math.round(R * 0.98),
-        pitch: 5,
-        startAngle: 0
-      },
-      // Tầng 4 (Chóp dưới): 4 ảnh, cách nhau 90°, so le 45°
-      {
-        count: 4,
-        y: Math.round(R * 0.60),
-        r: Math.round(R * 0.80),
-        pitch: 15,
-        startAngle: 45
+        count: 5,
+        y: Math.round(76 * scaleFactor),
+        r: Math.round(118 * scaleFactor),
+        startAngle: 36
       }
     ];
 
@@ -139,13 +127,11 @@ export class PhotoSphere {
       for (let i = 0; i < tier.count; i++) {
         if (photoIndex >= this.photos.length) break;
         const photo = this.photos[photoIndex];
-        const lonAngle = tier.startAngle + i * angleStep;
+        const lonAngleDeg = tier.startAngle + i * angleStep;
+        const lonAngleRad = (lonAngleDeg * Math.PI) / 180;
 
         const card = document.createElement('div');
         card.className = 'sphere-photo-card';
-
-        // Đặt vị trí 3D chính xác trên bề mặt hình cầu
-        card.style.transform = `rotateY(${lonAngle}deg) translateY(${tier.y}px) translateZ(${tier.r}px) rotateX(${tier.pitch}deg)`;
 
         card.innerHTML = `
           <div class="sphere-card-inner">
@@ -165,7 +151,7 @@ export class PhotoSphere {
           </div>
         `;
 
-        // Quản lý biến chạm để mở ảnh chính xác
+        // Cảm ứng chạm mở ảnh phóng to
         let pointerDownTime = 0;
         let pointerDownX = 0;
         let pointerDownY = 0;
@@ -179,7 +165,6 @@ export class PhotoSphere {
         card.addEventListener('pointerup', (e) => {
           const moveDist = Math.hypot(e.clientX - pointerDownX, e.clientY - pointerDownY);
           const pressDuration = Date.now() - pointerDownTime;
-          // Nhận diện cú chạm ngón tay (tap) dứt khoát
           if (moveDist < 8 && pressDuration < 400) {
             e.stopPropagation();
             this.previewPhoto(photo);
@@ -189,7 +174,7 @@ export class PhotoSphere {
         this.cardElements.push({
           el: card,
           inner: card.querySelector('.sphere-card-inner'),
-          baseLon: lonAngle,
+          baseAngleRad: lonAngleRad,
           baseY: tier.y,
           baseR: tier.r,
           photo
@@ -268,12 +253,12 @@ export class PhotoSphere {
         this.lastDeltaX = deltaX;
         this.lastDeltaY = deltaY;
 
-        // Xoay ngang và giới hạn góc nghiêng dọc (-26° đến +26°) để giữ dáng tròn chuẩn
-        this.rotY += deltaX * 0.35;
-        this.rotX = Math.max(-26, Math.min(26, this.rotX - deltaY * 0.22));
+        // Xoay 360 độ mượt mà quanh trục Y và nghiêng nhẹ trục X
+        this.rotY += deltaX * 0.007;
+        this.rotX = Math.max(-0.28, Math.min(0.28, this.rotX - deltaY * 0.004));
 
-        this.velY = deltaX * 0.12;
-        this.velX = -deltaY * 0.08;
+        this.velY = deltaX * 0.003;
+        this.velX = -deltaY * 0.0015;
 
         this.startX = pos.x;
         this.startY = pos.y;
@@ -323,59 +308,66 @@ export class PhotoSphere {
       if (!this.isDragging) {
         // Tự động xoay chậm rãi thư thái + giảm tốc quán tính
         this.rotY += this.autoSpinSpeed + this.velY;
-        this.rotX = Math.max(-26, Math.min(26, this.rotX + this.velX));
+        this.rotX = Math.max(-0.28, Math.min(0.28, this.rotX + this.velX));
 
         this.velY *= 0.94;
         this.velX *= 0.94;
-        if (Math.abs(this.velY) < 0.01) this.velY = 0;
-        if (Math.abs(this.velX) < 0.01) this.velX = 0;
+        if (Math.abs(this.velY) < 0.0001) this.velY = 0;
+        if (Math.abs(this.velX) < 0.0001) this.velX = 0;
       }
 
-      // Xoay thế giới 3D
-      if (this.world) {
-        this.world.style.transform = `rotateX(${this.rotX}deg) rotateY(${this.rotY}deg)`;
-      }
+      // ── Real-time 3D Spherical Coordinate Rotation & Depth Sorting ──
+      const cosY = Math.cos(this.rotY);
+      const sinY = Math.sin(this.rotY);
+      const cosX = Math.cos(this.rotX);
+      const sinX = Math.sin(this.rotX);
 
-      // ── Real-time 3D Spherical Depth Sorting & Shading ──────────────
-      // Tính toán chính xác vị trí chiều sâu Z của từng card theo góc nhìn người xem
-      const rotYRad = (this.rotY * Math.PI) / 180;
-      const rotXRad = (this.rotX * Math.PI) / 180;
-      const cosX = Math.cos(rotXRad);
-      const sinX = Math.sin(rotXRad);
-
-      const R = this.currentR || 172;
+      const maxR = this.maxR || 176;
       const count = this.cardElements.length;
 
       for (let i = 0; i < count; i++) {
         const item = this.cardElements[i];
 
-        // Góc kinh độ thực tế sau khi xoay rotY
-        const lonRad = (item.baseLon * Math.PI) / 180 + rotYRad;
+        // Tọa độ ban đầu trên mặt phẳng ngang của tầng đó
+        const x0 = item.baseR * Math.sin(item.baseAngleRad);
+        const y0 = item.baseY;
+        const z0 = item.baseR * Math.cos(item.baseAngleRad);
 
-        // Tọa độ trước khi xoay rotX
-        const Y1 = item.baseY;
-        const Z1 = item.baseR * Math.cos(lonRad);
+        // 1. Phép quay 3D quanh trục đứng Y (góc rotY)
+        const x1 = x0 * cosY + z0 * sinY;
+        const y1 = y0;
+        const z1 = -x0 * sinY + z0 * cosY;
 
-        // Chiều sâu Z sau khi xoay thế giới góc rotX (hướng ra mắt người xem)
-        const zView = -Y1 * sinX + Z1 * cosX;
-        const normZ = zView / R; // Khoảng từ -1 (tận cùng phía sau) đến +1 (chính diện trước)
+        // 2. Phép nghiêng 3D quanh trục ngang X (góc rotX)
+        const x2 = x1;
+        const y2 = y1 * cosX - z1 * sinX;
+        const z2 = y1 * sinX + z1 * cosX;
 
-        if (normZ > 0.02) {
-          // BÁN CẦU PHÍA TRƯỚC: Luôn sáng rõ nét 100%, thấy trọn vẹn từng gương mặt
-          const opacity = Math.min(1, 0.88 + 0.12 * Math.max(0, normZ));
-          const brightness = Math.min(1.15, 0.98 + 0.17 * Math.max(0, normZ));
+        // 3. Chuẩn hóa chiều sâu Z (-1 ở xa nhất sau lưng, +1 ở gần nhất trước mặt)
+        const zNorm = z2 / maxR;
 
-          item.el.style.opacity = opacity.toFixed(2);
-          item.el.style.pointerEvents = 'auto';
-          item.el.style.visibility = 'visible';
-          if (item.inner) {
-            item.inner.style.filter = `brightness(${brightness.toFixed(2)}) contrast(1.04)`;
-          }
-        } else {
-          // BÁN CẦU PHÍA SAU: Ẩn tinh tế, không lộ mặt ngược, giải phóng GPU
-          item.el.style.opacity = '0';
-          item.el.style.pointerEvents = 'none';
-          item.el.style.visibility = 'hidden';
+        // Tọa độ màn hình (center 0,0 của sphere-3d-world)
+        const screenX = x2;
+        const screenY = y2;
+
+        // Hệ số phóng to/thu nhỏ theo chiều sâu (Mặt trước to 1.15x rõ nét, mặt sau 0.75x tạo chiều sâu)
+        const scale = 0.75 + 0.40 * ((zNorm + 1) / 2);
+
+        // Opacity: Mặt trước sáng 100%, mặt sau mờ nhẹ 0.45 để nhìn xuyên thấu như đèn hoa đăng
+        const opacity = 0.45 + 0.55 * Math.max(0, (zNorm + 0.8) / 1.8);
+
+        // Độ sáng: Mặt trước sáng bừng rực rỡ, mặt sau dịu dàng
+        const brightness = 0.82 + 0.30 * Math.max(0, (zNorm + 0.5) / 1.5);
+
+        // Thứ tự lớp zIndex: Mặt sau (<100) nằm sau Mặt Trăng, Mặt trước (>100) nằm trước Mặt Trăng
+        const zIndex = Math.round(100 + zNorm * 90);
+
+        // Áp dụng biến đổi GPU hardware-accelerated: thẻ luôn thẳng đứng vuông vắn, không méo mó!
+        item.el.style.transform = `translate3d(${screenX.toFixed(1)}px, ${screenY.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+        item.el.style.zIndex = zIndex;
+        item.el.style.opacity = opacity.toFixed(2);
+        if (item.inner) {
+          item.inner.style.filter = `brightness(${brightness.toFixed(2)}) contrast(1.04)`;
         }
       }
 
