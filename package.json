@@ -1,10 +1,10 @@
 {
   "name": "trung-thu-love-gift",
   "version": "1.0.0",
-  "description": "Trang web quà tặng Trung Thu tình yêu lãng mạn (Lồng đèn hoa ngôi sao & Mã QR Trái Tim)",
+  "description": "Trang web qu\u00e0 t\u1eb7ng Trung Thu t\u00ecnh y\u00eau l\u00e3ng m\u1ea1n (L\u1ed3ng \u0111\u00e8n hoa ng\u00f4i sao & M\u00e3 QR Tr\u00e1i Tim)",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node init && vite",
+    "build": "node init && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {

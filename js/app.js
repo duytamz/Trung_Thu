@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const audioPlayer = new RomanticAudioPlayer('audio-player-pill');
 
   // 5. Initialize 3D Photo Sphere Component ("Quả Cầu Kỷ Niệm")
-  const photoSphere = new PhotoSphere();
+  const photoSphere = new PhotoSphere(skyCanvas);
 
   // 6. Parse Personalized Data from URL hash (if scanned from QR)
   parseURLPersonalization(loveLetter);

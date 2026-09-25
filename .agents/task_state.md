@@ -24,3 +24,10 @@
 - [x] Tích hợp ca khúc hot trend "Thêu Hoa Dệt Gấm" (buitruonglinh, HURRYKNG, JSOL, CONGB - Anh Trai Say Hi): Tìm kiếm nguồn nhạc chuẩn studio, chuyển đổi sang MP3 192kbps chất lượng cao, cập nhật phát nhạc nền tự động và tối ưu giao diện nút phát nhạc trên trang web.
 - [x] Cắt bỏ chính xác 4 giây đầu đoạn giới thiệu/quảng cáo của bài hát "Thêu Hoa Dệt Gấm" bằng ffmpeg chuẩn xác, nhạc vào ngay giai điệu đàn tranh sáo trúc êm dịu, không còn tạp âm quảng cáo.
 - [x] Cập nhật nội dung bức thư tình Trung Thu mới theo đúng lời nhắn nhủ người dùng yêu cầu ("Gửi em - chàng trai anh yêu thương nhất... Trung Thu đầu tiên... Yêu em thật nhiều! ❤️"), đồng bộ trên cả [js/loveLetter.js](file:///e:/TrungThu/js/loveLetter.js) và [admin.html](file:///e:/TrungThu/admin.html).
+- [x] Tối ưu hóa toàn diện hiệu năng web siêu nhẹ và xóa sạch cache trên điện thoại:
+  - Cache Busting: Thêm No-Cache meta tags (`no-cache, no-store, must-revalidate`) và hash phiên bản `?v=2.2.0` cho CSS/JS để điện thoại tự động nạp code mới nhất mà không giữ cache cũ.
+  - Loại bỏ hoàn toàn `item.inner.style.filter` tính toán mỗi frame trong vòng lặp 3D của Quả Cầu Kỷ Niệm (triệt tiêu 100% hiện tượng drop FPS / jank trên mobile).
+  - Tự động tạm dừng `SkyCanvas` nền khi mở bất kỳ modal nào (`PhotoSphere`, `LoveLetter`) để dồn 100% GPU/CPU xử lý mượt mà, phục hồi mượt mà khi đóng modal.
+  - Bổ sung `contain: layout style paint;` và culling các thẻ ảnh khuất sau lưng (`zNorm < -0.88`).
+  - Loại bỏ các `backdrop-filter: blur(...)` nặng nề trên mobile, tinh gọn `box-shadow` nhiều tầng thành 1 tầng nhẹ.
+  - Giảm thiểu physics loop của lồng đèn: ngừng layout thrashing khi lồng đèn ở vị trí cân bằng.

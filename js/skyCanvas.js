@@ -30,6 +30,10 @@ export class SkyCanvas {
     // ── Cached background gradient ────────────────────────────────────────
     this._bgGrad = null;
 
+    // ── Performance pause state ──────────────────────────────────────────
+    this.isPaused = false;
+    this.rafId = null;
+
     this.init();
   }
 
@@ -75,7 +79,7 @@ export class SkyCanvas {
   // =========================================================================
   createStars() {
     this.stars = [];
-    const density   = this.isMobile ? 18000 : 5000;
+    const density   = this.isMobile ? 25000 : 5000;
     const starCount = Math.floor((this.width * this.height) / density);
     const colors    = ['#ffffff', '#fff5cc', '#ffeaa7', '#dff9fb', '#fd79a8'];
 
@@ -861,9 +865,26 @@ export class SkyCanvas {
   }
 
   // =========================================================================
-  // ANIMATE — Smooth 60 FPS RAF Loop
+  // ANIMATE — Smooth 60 FPS RAF Loop with Mobile Pause/Resume
   // =========================================================================
+  pause() {
+    this.isPaused = true;
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
+
+  resume() {
+    if (this.isPaused) {
+      this.isPaused = false;
+      this.animate();
+    }
+  }
+
   animate() {
+    if (this.isPaused) return;
+
     this._drawBackground();
     this.drawStars();
     this.drawMoon();
@@ -876,6 +897,6 @@ export class SkyCanvas {
     this.drawBlossomBursts();
     this.drawSparkles();
 
-    requestAnimationFrame(() => this.animate());
+    this.rafId = requestAnimationFrame(() => this.animate());
   }
 }

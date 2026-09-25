@@ -677,11 +677,20 @@ html, body {
   .polaroid-img { height: 80px; }
   .polaroid-caption { font-size: 0.78rem; }
 
-  /* Photo Sphere Mobile */
+  /* Photo Sphere Mobile High Performance */
+  .modal-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(4, 6, 18, 0.92) !important;
+  }
   .sphere-modal-container {
     padding: 12px 6px 6px;
     height: 88vh;
     max-height: 720px;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: radial-gradient(circle at 50% 45%, #15193c 0%, #0a0d24 60%, #050713 100%) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85) !important;
   }
   .sphere-title { font-size: 1.8rem; }
   .sphere-subtitle { font-size: 0.8rem; margin-top: 2px; }
@@ -691,37 +700,49 @@ html, body {
     top: -41px;
     width: 58px;
     height: 82px;
+    contain: layout style paint;
   }
   .sphere-card-inner {
     border-radius: 10px;
     border-width: 1.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6) !important;
   }
   .sphere-card-badge {
     font-size: 0.58rem;
     padding: 2px 5px;
     bottom: 3px;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(8, 12, 32, 0.88) !important;
   }
   .sphere-card-sparkle {
     font-size: 0.65rem;
     top: 3px;
     right: 4px;
+    text-shadow: none !important;
   }
   .sphere-lunar-core {
     width: 90px;
     height: 90px;
+    box-shadow: 0 0 25px rgba(255, 220, 120, 0.5) !important;
   }
   .sphere-orbital-ring {
     width: 360px;
     height: 360px;
+    box-shadow: none !important;
   }
   .sphere-orbital-ring.ring-2 {
     width: 380px;
     height: 380px;
+    box-shadow: none !important;
+  }
+  .sphere-sparkle-dot {
+    box-shadow: 0 0 4px #ffd700 !important;
   }
 }
 
 /* =========================================================================
-   3D PHOTO SPHERE MODAL & STAGE (v2.0)
+   3D PHOTO SPHERE MODAL & STAGE (v2.0 - High Performance)
    ========================================================================= */
 .sphere-modal-container {
   background: radial-gradient(circle at 50% 45%, #181d45 0%, #0d112b 60%, #060814 100%);
@@ -734,8 +755,7 @@ html, body {
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 40px rgba(255, 184, 77, 0.28), 0 0 80px rgba(255, 107, 139, 0.18);
-  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(255, 184, 77, 0.2);
   padding: 22px 16px 14px;
   overflow: hidden;
 }
@@ -873,6 +893,7 @@ html, body {
   width: 76px;
   height: 106px;
   will-change: transform, opacity;
+  contain: layout style paint;
   cursor: pointer;
   transform-origin: center center;
   transition: opacity 0.15s ease;
@@ -917,8 +938,7 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   padding: 3px 8px;
-  background: rgba(8, 12, 32, 0.75);
-  backdrop-filter: blur(5px);
+  background: rgba(8, 12, 32, 0.88);
   border: 1px solid rgba(255, 215, 120, 0.45);
   border-radius: 14px;
   color: #fff6ce;

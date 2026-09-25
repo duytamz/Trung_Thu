@@ -7,7 +7,8 @@
  * - Tương tác vuốt 360° mượt mà, quán tính tự nhiên, tối ưu 60 FPS trên điện thoại
  */
 export class PhotoSphere {
-  constructor() {
+  constructor(skyCanvas = null) {
+    this.skyCanvas = skyCanvas;
     this.modal = document.getElementById('photo-sphere-modal');
     this.world = document.getElementById('sphere-3d-world');
     this.sparklesContainer = document.getElementById('sphere-sparkles');
@@ -190,7 +191,8 @@ export class PhotoSphere {
     if (!this.sparklesContainer) return;
     this.sparklesContainer.innerHTML = '';
 
-    const sparkleCount = window.innerWidth < 768 ? 20 : 36;
+    const isMobile = window.innerWidth < 768;
+    const sparkleCount = isMobile ? 8 : 28;
     for (let i = 0; i < sparkleCount; i++) {
       const sp = document.createElement('div');
       sp.className = 'sphere-sparkle-dot';
@@ -286,6 +288,7 @@ export class PhotoSphere {
     if (!this.modal) return;
     this.isOpen = true;
     this.modal.classList.add('active');
+    if (this.skyCanvas) this.skyCanvas.pause();
     this.startLoop();
   }
 
@@ -294,6 +297,7 @@ export class PhotoSphere {
     this.isOpen = false;
     this.modal.classList.remove('active');
     this.stopLoop();
+    if (this.skyCanvas) this.skyCanvas.resume();
 
     const preview = document.getElementById('sphere-preview-lightbox');
     if (preview) preview.remove();
@@ -346,6 +350,18 @@ export class PhotoSphere {
         // 3. Chuẩn hóa chiều sâu Z (-1 ở xa nhất sau lưng, +1 ở gần nhất trước mặt)
         const zNorm = z2 / maxR;
 
+        // Tối ưu GPU Mobile: Culling ẩn thẻ ở quá xa phía sau lưng bị che khuất
+        if (zNorm < -0.88) {
+          if (item.isVisible !== false) {
+            item.el.style.visibility = 'hidden';
+            item.isVisible = false;
+          }
+          continue;
+        } else if (item.isVisible === false) {
+          item.el.style.visibility = 'visible';
+          item.isVisible = true;
+        }
+
         // Tọa độ màn hình (center 0,0 của sphere-3d-world)
         const screenX = x2;
         const screenY = y2;
@@ -356,19 +372,13 @@ export class PhotoSphere {
         // Opacity: Mặt trước sáng 100%, mặt sau mờ nhẹ 0.45 để nhìn xuyên thấu như đèn hoa đăng
         const opacity = 0.45 + 0.55 * Math.max(0, (zNorm + 0.8) / 1.8);
 
-        // Độ sáng: Mặt trước sáng bừng rực rỡ, mặt sau dịu dàng
-        const brightness = 0.82 + 0.30 * Math.max(0, (zNorm + 0.5) / 1.5);
-
         // Thứ tự lớp zIndex: Mặt sau (<100) nằm sau Mặt Trăng, Mặt trước (>100) nằm trước Mặt Trăng
         const zIndex = Math.round(100 + zNorm * 90);
 
-        // Áp dụng biến đổi GPU hardware-accelerated: thẻ luôn thẳng đứng vuông vắn, không méo mó!
+        // Áp dụng biến đổi GPU hardware-accelerated thuần túy: cực nhẹ, không gây jank!
         item.el.style.transform = `translate3d(${screenX.toFixed(1)}px, ${screenY.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
         item.el.style.zIndex = zIndex;
         item.el.style.opacity = opacity.toFixed(2);
-        if (item.inner) {
-          item.inner.style.filter = `brightness(${brightness.toFixed(2)}) contrast(1.04)`;
-        }
       }
 
       this.animId = requestAnimationFrame(render);

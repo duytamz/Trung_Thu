@@ -143,13 +143,17 @@ export class LoveLetter {
     if (!this.modal) return;
     this.modal.classList.add('active');
     if (this.skyCanvas) {
-      this.skyCanvas.createSparkleBurst(window.innerWidth * 0.5, window.innerHeight * 0.5, 30);
+      this.skyCanvas.createSparkleBurst(window.innerWidth * 0.5, window.innerHeight * 0.5, 20);
+      this.skyCanvas.pause();
     }
   }
 
   close() {
     if (!this.modal) return;
     this.modal.classList.remove('active');
+    if (this.skyCanvas) {
+      this.skyCanvas.resume();
+    }
   }
 
   setConfig(newConfig) {
