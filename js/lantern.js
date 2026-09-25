@@ -534,14 +534,32 @@ export class Lantern {
   }
 
   startPhysicsLoop() {
+    let wasMoving = true;
     const update = () => {
-      // Spring lerp towards target
-      this.currentRotateX += (this.targetRotateX - this.currentRotateX) * 0.08;
-      this.currentRotateY += (this.targetRotateY - this.currentRotateY) * 0.08;
-      this.currentRotateZ += (this.targetRotateZ - this.currentRotateZ) * 0.08;
+      const diffX = this.targetRotateX - this.currentRotateX;
+      const diffY = this.targetRotateY - this.currentRotateY;
+      const diffZ = this.targetRotateZ - this.currentRotateZ;
+      const isMoving = this.isDragging || (Math.abs(diffX) + Math.abs(diffY) + Math.abs(diffZ) > 0.015);
 
-      if (this.pivot) {
-        this.pivot.style.transform = `rotateX(${this.currentRotateX}deg) rotateY(${this.currentRotateY}deg) rotateZ(${this.currentRotateZ}deg)`;
+      if (isMoving) {
+        // Spring lerp towards target
+        this.currentRotateX += diffX * 0.08;
+        this.currentRotateY += diffY * 0.08;
+        this.currentRotateZ += diffZ * 0.08;
+
+        if (this.pivot) {
+          this.pivot.style.transform = `rotateX(${this.currentRotateX.toFixed(2)}deg) rotateY(${this.currentRotateY.toFixed(2)}deg) rotateZ(${this.currentRotateZ.toFixed(2)}deg)`;
+        }
+        wasMoving = true;
+      } else if (wasMoving) {
+        // Snap to exact target once and rest
+        this.currentRotateX = this.targetRotateX;
+        this.currentRotateY = this.targetRotateY;
+        this.currentRotateZ = this.targetRotateZ;
+        if (this.pivot) {
+          this.pivot.style.transform = `rotateX(${this.currentRotateX}deg) rotateY(${this.currentRotateY}deg) rotateZ(${this.currentRotateZ}deg)`;
+        }
+        wasMoving = false;
       }
 
       requestAnimationFrame(update);

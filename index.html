@@ -6,9 +6,14 @@
   <title>Một Mùa Thương - Quà Tặng Trung Thu Tình Yêu</title>
   <meta name="description" content="Món quà Trung Thu lãng mạn dành riêng cho người yêu: Lồng đèn hoa ngôi sao 3D, hoa nhảy múa, vầng trăng rằm huyền ảo và bức thư tình đong đầy yêu thương." />
   
-  <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/lantern.css" />
+  <!-- Cache Control (Force Fresh Reload on Mobile) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  
+  <!-- CSS Stylesheets with Cache Busting -->
+  <link rel="stylesheet" href="css/main.css?v=2.2.0" />
+  <link rel="stylesheet" href="css/lantern.css?v=2.2.0" />
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏮</text></svg>" />
@@ -159,7 +164,7 @@
   <!-- Background Music Audio Element (Thêu Hoa Dệt Gấm - Anh Trai Say Hi) -->
   <audio id="bg-audio" preload="auto" loop src="assets/audio/theu_hoa_det_gam.mp3"></audio>
 
-  <!-- JavaScript ES6 Module Entry Point -->
-  <script type="module" src="js/app.js"></script>
+  <!-- JavaScript ES6 Module Entry Point with Cache Busting -->
+  <script type="module" src="js/app.js?v=2.2.0"></script>
 </body>
 </html>
