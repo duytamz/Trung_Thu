@@ -13,7 +13,7 @@ export class LoveLetter {
       loverName: options.loverName || 'Em Bé Của Anh',
       startDate: options.startDate || '2023-09-29', // Default Mid-Autumn anniversary
       letterTitle: 'Bức Thư Mùa Trăng',
-      letterContent: options.letterContent || `Gửi em - chàng trai anh yêu thương nhất,\n\nTrung Thu này không chỉ có ánh trăng tròn và lồng đèn rực rỡ, mà còn có em - món quà tuyệt vời nhất mà cuộc đời đã mang đến cho anh.\n\nCảm ơn em vì đã luôn dịu dàng, luôn mang lại nụ cười và sự ấm áp cho anh mỗi ngày. Chúc cho em bé của anh một mùa Tết Trung Thu thật nhiều niềm vui, luôn rạng rỡ và an yên.\n\nMong rằng dù bao mùa trăng nữa đi qua, đôi bàn tay này vẫn sẽ luôn nắm chặt lấy tay em và chở che cho em.\n\nYêu em thật nhiều! ❤️`,
+      letterContent: options.letterContent || `Gửi em - chàng trai anh yêu thương nhất,\n\nTrung Thu này là Trung Thu đầu tiên của anh và em bé từ lúc quen biết rồi đến yêu nhau. Tuy hơi tiếc là chưa thể bên em bé đúng dịp nhưng mà anh mong rằng em bé sẽ có một Trung Thu vui vẻ, hoạt bát và có thêm kỷ niệm vui.\n\nTrung Thu này không chỉ có ánh trăng tròn và lồng đèn rực rỡ, mà còn có em - món quà tuyệt vời nhất mà cuộc đời đã mang đến cho anh.\n\nCảm ơn em vì đã luôn dịu dàng, luôn mang lại nụ cười và sự ấm áp cho anh mỗi ngày. Chúc cho em bé của anh một mùa Tết Trung Thu thật nhiều niềm vui, luôn rạng rỡ và an yên.\n\nMong rằng dù bao mùa trăng nữa đi qua, đôi bàn tay này vẫn sẽ luôn nắm chặt lấy tay em và chở che cho em.\n\nYêu em thật nhiều! ❤️`,
       photos: options.photos || [
         {
           webp: 'assets/images/memory1.webp',
