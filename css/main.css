@@ -679,32 +679,43 @@ html, body {
 
   /* Photo Sphere Mobile */
   .sphere-modal-container {
-    padding: 16px 10px 10px;
-    height: 84vh;
+    padding: 14px 8px 8px;
+    height: 86vh;
+    max-height: 680px;
   }
-  .sphere-title { font-size: 1.9rem; }
-  .sphere-stage { perspective: 720px; }
+  .sphere-title { font-size: 1.8rem; }
+  .sphere-subtitle { font-size: 0.8rem; margin-top: 2px; }
+  .sphere-stage { perspective: 680px; }
   .sphere-photo-card {
-    left: -33px;
-    top: -47px;
-    width: 66px;
-    height: 94px;
+    left: -27px;
+    top: -38px;
+    width: 54px;
+    height: 76px;
+  }
+  .sphere-card-inner {
+    border-radius: 10px;
+    border-width: 1.5px;
   }
   .sphere-card-badge {
-    font-size: 0.72rem;
-    padding: 12px 2px 3px;
+    font-size: 0.64rem;
+    padding: 10px 2px 2px;
+  }
+  .sphere-card-sparkle {
+    font-size: 0.6rem;
+    top: 2px;
+    right: 3px;
   }
   .sphere-lunar-core {
-    width: 105px;
-    height: 105px;
+    width: 110px;
+    height: 110px;
   }
   .sphere-orbital-ring {
-    width: 275px;
-    height: 275px;
+    width: 320px;
+    height: 320px;
   }
   .sphere-orbital-ring.ring-2 {
-    width: 295px;
-    height: 295px;
+    width: 345px;
+    height: 345px;
   }
 }
 
@@ -857,15 +868,17 @@ html, body {
 
 .sphere-photo-card {
   position: absolute;
-  left: -43px;
-  top: -60px;
-  width: 86px;
-  height: 120px;
+  left: -37px;
+  top: -52px;
+  width: 74px;
+  height: 104px;
   transform-style: preserve-3d;
   will-change: transform, opacity;
   cursor: pointer;
   transform-origin: center center;
   transition: opacity 0.15s ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .sphere-card-inner {
@@ -873,16 +886,18 @@ html, body {
   height: 100%;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(18, 22, 54, 0.85);
-  border: 2px solid rgba(255, 225, 140, 0.85);
+  background: rgba(18, 22, 54, 0.88);
+  border: 1.5px solid rgba(255, 225, 140, 0.85);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.65), 0 0 15px rgba(255, 215, 120, 0.35);
   position: relative;
   transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease, border-color 0.25s ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .sphere-photo-card:hover .sphere-card-inner,
 .sphere-photo-card:active .sphere-card-inner {
-  transform: scale(1.18);
+  transform: scale(1.15);
   border-color: #ff6b8b;
   box-shadow: 0 12px 30px rgba(255, 107, 139, 0.65), 0 0 22px rgba(255, 221, 128, 0.6);
   z-index: 9999 !important;
