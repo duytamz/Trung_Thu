@@ -91,8 +91,8 @@ export class PhotoSphere {
     this.cardElements = [];
 
     const isMobile = window.innerWidth < 768;
-    // Bán kính quả cầu tương thích hoàn hảo kích thước khung nhìn
-    this.currentR = isMobile ? 172 : 230;
+    // Bán kính quả cầu mở rộng giúp thẻ ảnh to rõ và không gian thông thoáng
+    this.currentR = isMobile ? 195 : 265;
     const R = this.currentR;
 
     // Chuẩn toán học hình cầu 4 tầng
@@ -100,33 +100,33 @@ export class PhotoSphere {
       // Tầng 1 (Chóp trên): 4 ảnh, cách nhau 90°
       {
         count: 4,
-        y: Math.round(-R * 0.615),
-        r: Math.round(R * 0.788),
-        pitch: -18,
+        y: Math.round(-R * 0.60),
+        r: Math.round(R * 0.80),
+        pitch: -15,
         startAngle: 0
       },
       // Tầng 2 (Bán cầu trên): 6 ảnh, cách nhau 60°, so le 30°
       {
         count: 6,
-        y: Math.round(-R * 0.208),
-        r: Math.round(R * 0.978),
-        pitch: -6,
+        y: Math.round(-R * 0.20),
+        r: Math.round(R * 0.98),
+        pitch: -5,
         startAngle: 30
       },
       // Tầng 3 (Bán cầu dưới): 6 ảnh, cách nhau 60°, so le 0°
       {
         count: 6,
-        y: Math.round(R * 0.208),
-        r: Math.round(R * 0.978),
-        pitch: 6,
+        y: Math.round(R * 0.20),
+        r: Math.round(R * 0.98),
+        pitch: 5,
         startAngle: 0
       },
       // Tầng 4 (Chóp dưới): 4 ảnh, cách nhau 90°, so le 45°
       {
         count: 4,
-        y: Math.round(R * 0.615),
-        r: Math.round(R * 0.788),
-        pitch: 18,
+        y: Math.round(R * 0.60),
+        r: Math.round(R * 0.80),
+        pitch: 15,
         startAngle: 45
       }
     ];
@@ -360,16 +360,16 @@ export class PhotoSphere {
         const zView = -Y1 * sinX + Z1 * cosX;
         const normZ = zView / R; // Khoảng từ -1 (tận cùng phía sau) đến +1 (chính diện trước)
 
-        if (normZ > 0.04) {
-          // BÁN CẦU PHÍA TRƯỚC: Rõ nét, rạng ngời, lộng lẫy
-          const opacity = Math.min(1, 0.45 + 0.55 * (normZ / 0.9));
-          const brightness = Math.min(1.15, 0.82 + 0.33 * normZ);
+        if (normZ > 0.02) {
+          // BÁN CẦU PHÍA TRƯỚC: Luôn sáng rõ nét 100%, thấy trọn vẹn từng gương mặt
+          const opacity = Math.min(1, 0.88 + 0.12 * Math.max(0, normZ));
+          const brightness = Math.min(1.15, 0.98 + 0.17 * Math.max(0, normZ));
 
           item.el.style.opacity = opacity.toFixed(2);
           item.el.style.pointerEvents = 'auto';
           item.el.style.visibility = 'visible';
           if (item.inner) {
-            item.inner.style.filter = `brightness(${brightness.toFixed(2)})`;
+            item.inner.style.filter = `brightness(${brightness.toFixed(2)}) contrast(1.04)`;
           }
         } else {
           // BÁN CẦU PHÍA SAU: Ẩn tinh tế, không lộ mặt ngược, giải phóng GPU
